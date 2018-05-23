@@ -1,0 +1,28 @@
+.pagination.disabled a,  .pagination.disabled a:hover,  .pagination.disabled a:focus,  .pagination.disabled span {
+    color: #eee;
+    background: #fff;
+    cursor: default;
+}
+
+.pagination { float: left; }
+
+.pagination.disabled li.active a {
+    color: #fff;
+    background: #cccccc;
+    border-color: #cccccc;
+}
+
+.paging-container {
+    display:inline-block;
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+}
+
+.paging-container select {
+    float: left;
+    margin: 20px 0 20px 10px;
+    padding: 6px 6px;
+    border-color: #ddd;
+    border-radius: 4px;
+}

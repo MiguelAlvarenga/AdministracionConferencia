@@ -1,0 +1,55 @@
+
+/* Atributos Para la tablas */
+
+.celda{
+	font-weight: normal;
+}
+
+.td-id{
+	text-align: center;
+	width: 60px !important;
+}
+
+.td-left{
+	text-align: left;
+}
+
+.td-center{
+	text-align: center;
+}
+
+.td-right{
+	text-align: right;
+}
+
+.td-btn{
+	text-align: center;
+	width: 80px !important;
+}
+
+.td-btn2{
+	text-align: center;
+	width: 120px !important;
+}
+
+.td-btn3{
+	text-align: center;
+	width: 160px !important;
+}
+
+.td-btn4{
+	text-align: center;
+	width: 200px !important;
+}
+
+.centered-heading > table > thead > tr > th{
+	text-align: center;	
+}
+
+table > thead > tr > th:first-child{
+	text-align: center;	
+}
+
+table > thead > tr > th:last-child{
+	text-align: center;	
+}

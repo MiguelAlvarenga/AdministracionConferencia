@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+				  xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+				  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+
+	<render-kit>
+		<renderer>
+			<component-family>javax.faces.Messages</component-family>
+			<renderer-type>javax.faces.Messages</renderer-type>
+			<renderer-class>utils.BootstrapMessagesRenderer</renderer-class>
+		</renderer>
+	</render-kit>
+   
+        <application>
+	<locale-config>
+		<default-locale>es</default-locale>
+		<supported-locale>en</supported-locale>
+	</locale-config>
+	
+	<resource-bundle>
+		<base-name>utils.mis_mensajes</base-name>
+		<var>msgs</var>
+	</resource-bundle>
+	
+</application>       
+        
+	<navigation-rule>
+		<from-view-id>/cambiarPassword.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{sesionUBean.navRuleChgPwd}</from-action>
+			<from-outcome>main</from-outcome>
+			<to-view-id>/index.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{sesionUBean.navRuleChgPwd}</from-action>            
+			<from-outcome>change</from-outcome>
+			<to-view-id>/cambiarPassword.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+                <navigation-case>
+			<from-action>*</from-action>
+			<to-view-id>/cambiarPassword.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+                
+	</navigation-rule> 
+        
+        <!--Reglas de navegación del Menú Principal-->
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>webconferencias</from-outcome>
+			<to-view-id>/conferencias.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>estadoWC</from-outcome>
+			<to-view-id>/estadoConferencias.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>estilos</from-outcome>
+			<to-view-id>/estilos.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>programas</from-outcome>
+			<to-view-id>/programas.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>roles</from-outcome>
+			<to-view-id>/roles.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>plantillasCorreo</from-outcome>
+			<to-view-id>/plantillasCorreo.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>invitaciones</from-outcome>
+			<to-view-id>/index.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>usuarios</from-outcome>
+			<to-view-id>/usuarios.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>configuracion</from-outcome>
+			<to-view-id>/configuracion.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>principal</from-outcome>
+			<to-view-id>/index.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	<!--Fin Menú Principal-->
+
+        
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-action>#{sesionUBean.navRuleLogIn}</from-action>
+			<from-outcome>main</from-outcome>
+			<to-view-id>/index.xhtml</to-view-id>
+                        <redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{sesionUBean.navRuleLogIn}</from-action>            
+			<from-outcome>change</from-outcome>
+			<to-view-id>/cambiarPassword.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+				<navigation-case>
+			<from-action>#{sesionUBean.navRuleLogIn}</from-action>
+			<from-outcome>error</from-outcome>
+			<to-view-id>/index.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+        
+	     
+       
+	<navigation-rule> 
+		<from-view-id >/conferencias.xhtml</from-view-id> 
+		<navigation-case> 
+			<from-outcome>enviarCorreo</from-outcome> 
+			<to-view-id>/enviarCorreo.xhtml</to-view-id> 
+			<redirect include-view-params="true"> 
+				<view-param>
+					<name>conferencia</name> 
+					<value>#{conferenciaBean.conferencia.idConferencia}</value> 
+				</view-param> 
+				<view-param>
+					<name>check</name> 
+					<value>#{conferenciaBean.conferencia.checksumattendee}</value> 
+				</view-param> 
+				<view-param>
+					<name>correo</name>
+					<value>#{correoBean.correo.idCorreo}</value>
+				</view-param> 				
+			</redirect> 
+		</navigation-case> 
+	</navigation-rule>     
+</faces-config>

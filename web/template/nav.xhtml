@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"      
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<h:outputScript library="js" name="jquery-2.2.3.js" />
+		<h:outputScript library="js" name="bootstrap.js" />
+		<h:outputStylesheet library="css" name="bootstrap.css" />
+		<h:outputStylesheet library="css" name="plantilla_maestra.css" />
+		<h:outputStylesheet library="css" name="general.css" />
+	</h:head>
+	<body>
+		<ui:composition> 
+
+
+			<!-- 2. MENÚ DE NAVEGACIÓN (Panel Izquierdo) -->
+			<div class="col-sm-2 col-xs-12 vertical-menu menu-color menu-text-size">
+
+				<div class="navbar-default menu-setting-dimensions" role="navigation">
+					<div class="navbar-header">
+						<button name="btnNav" class="navbar-toggle" type="button" data-toggle="collapse" data-target="#listaEnlaces">
+							<span class="sr-only">Navigation</span>
+							<span class="icon-bar gray3-color" ></span>
+							<span class="icon-bar gray3-color"></span>
+							<span class="icon-bar gray3-color"></span>
+						</button>
+						<span class="visible-xs navbar-brand gray3-color-text">
+							#{msgs.NavMenu}
+						</span>
+					</div>
+					<div id="listaEnlaces" class="collapse navbar-collapse">
+
+						<div class=" visible-only-large-devices">
+							<br/>
+							<h:graphicImage styleClass="img-responsive sm-lr-padding" library="img" name="logo_bbb_full.png" />
+							<br/><br/>
+						</div>
+
+						<h:form id="frmNavigator" >
+							<ul class="nav">
+
+								<h:panelGroup rendered="#{!sesionUBean.logged}" >
+									<li>
+										<a class="item-menu menu-text-color puntos-suspensivos" onclick="$('#modalLogin').modal('show');" title="#{msgs.NavIniSesion}"  style="cursor: pointer;">
+											<span class="glyphicon glyphicon-log-in"></span> &nbsp;&nbsp;#{msgs.NavIniSesion}
+										</a>
+									</li>
+								</h:panelGroup>
+								<li>
+									<h:commandLink rendered="#{!sesionUBean.cambiandoPW}" action="principal" class="item-menu menu-text-color puntos-suspensivos" title="#{msgs.NavPrincipal}">
+										<span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;#{msgs.NavPrincipal}
+									</h:commandLink>
+								</li>
+								<li>
+									<h:commandLink rendered='#{!sesionUBean.cambiandoPW and sesionUBean.accesoXRol("conferencias.xhtml")}' action="webconferencias" class="item-menu menu-text-color puntos-suspensivos" title="#{msgs.NavWebconf}">
+										<span class="glyphicon glyphicon-film"></span>&nbsp;&nbsp;#{msgs.NavWebconf} 
+									</h:commandLink>
+								</li>
+
+								<li>
+									<h:commandLink rendered='#{!sesionUBean.cambiandoPW and sesionUBean.accesoXRol("programas.xhtml")}' action="programas" class="item-menu menu-text-color puntos-suspensivos" title="#{msgs.usuarioTitlePrograma}">
+										<span class="glyphicon glyphicon-th"></span>&nbsp;&nbsp;#{msgs.usuarioTitlePrograma}
+									</h:commandLink>
+								</li>
+								<li>
+									<h:commandLink rendered='#{!sesionUBean.cambiandoPW and sesionUBean.accesoXRol("plantillascorreo.xhtml")}' action="plantillasCorreo" class="item-menu menu-text-color puntos-suspensivos" title="#{msgs.NavPlanCorreo}">
+										<span class="glyphicon glyphicon-modal-window"></span>&nbsp;&nbsp;#{msgs.NavPlanCorreo}
+									</h:commandLink>
+								</li>   
+								<li>
+									<h:commandLink rendered='#{!sesionUBean.cambiandoPW and sesionUBean.accesoXRol("usuarios.xhtml")}' action="usuarios" class="item-menu menu-text-color puntos-suspensivos" title="#{msgs.NavUsuarios}">
+										<span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;#{msgs.NavUsuarios}
+									</h:commandLink>
+								</li>
+								<li>
+									<h:commandLink rendered='#{!sesionUBean.cambiandoPW and sesionUBean.accesoXRol("configuracion.xhtml")}' action="configuracion" class="item-menu menu-text-color puntos-suspensivos" title="#{msgs.NavConfiguracion}">
+										<span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;#{msgs.NavConfiguracion}
+									</h:commandLink>
+								</li>
+								<h:panelGroup rendered="#{sesionUBean.logged}">
+									<li>
+										<h:commandLink class="item-menu menu-text-color puntos-suspensivos" action="principal" title="#{msgs.NavCerrarSesion}">
+											<f:actionListener binding="#{sesionUBean.cerrarSesion()}"/>
+											<span class="glyphicon glyphicon-log-out"></span> &nbsp;&nbsp;#{msgs.NavCerrarSesion}
+										</h:commandLink>
+									</li>
+								</h:panelGroup>
+								<br/>
+								<li class="md-lr-padding" style=" bottom: 0;">
+									<label> #{msgs.NavIdioma} </label>
+									<h:selectOneMenu id="slcIdm" class="form-control" value="#{localeBean.lang}" >
+										<f:selectItem itemValue="es" itemLabel="Español"/>
+										<f:selectItem itemValue="en" itemLabel="English"/>
+										<f:ajax event="change" render="@all" listener="#{localeBean.changeLanguage()}" />
+									</h:selectOneMenu>
+								</li>
+								<br/>
+							</ul>
+						</h:form>
+					</div>
+				</div>
+				<h:form>
+
+
+				</h:form>
+			</div>
+		</ui:composition> 
+	</body>
+</html>

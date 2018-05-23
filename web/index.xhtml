@@ -1,0 +1,393 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XTHML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <link rel="icon" type="image/png" href="#{resource['img/logo_bbb.png']}" />		
+        <title>Administrador de Conferencias</title>
+
+        <h:outputScript library="js" name="jquery-2.2.3.js" />
+        <h:outputScript library="js" name="bootstrap.js" />
+        <h:outputScript library="js" name="pagination.js" />
+        <h:outputScript library="js" name="paginationW.js" />
+        <h:outputScript library="js" name="programa.js" />
+
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="plantilla_maestra.css" />
+        <h:outputStylesheet library="css" name="general.css" />
+        <h:outputStylesheet library="css" name="table.css" />
+        <h:outputStylesheet library="css" name="pagination.css" />
+    </h:head>
+
+    <h:body>
+
+        <ui:composition template="template/plantillaPrincipal.xhtml">
+            <ui:define name="content">
+                <div class="bg-lr-padding">												
+
+                    <div id="contenedorMensajes">
+                        <h:outputScript library="js" name="mensajesError.js" />
+                        <h:form id="frmMensajeGlobal">
+                            <h:messages/>
+                        </h:form>
+                    </div>
+
+
+                    <script type="text/javascript">
+
+                        function automatico() {
+                            $(".reload").trigger("click");
+                        }
+                        ;
+
+
+                        window.setInterval(function () {
+                            automatico()
+                        }, 60 * 1000);
+                    </script>
+
+
+                    <h:form id="frmConferencias" onkeypress="return event.keyCode !== 13;">
+
+                        <div id="conferenciasGlobal" class="col-sm-12 text-left"> 
+
+                            <!-- Conferencias en emision  -->
+                            <div id="conferenciasEmision" class="centered-heading">
+                                <h4>
+                                    <h:outputLabel id="txtTituloEmi" value="#{msgs.indexHeaderTblConferencias}" />
+                                    <h:form onkeypress="return event.keyCode !== 13;">                      
+                                        <div class="pull-right">
+                                            <input id="filterTPl" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrarTPl('.concat(indexBean.lista.size())).concat(')')}"></input>
+                                        </div>
+                                    </h:form>
+                                </h4>
+                                <h:dataTable id="dtConfEmision" styleClass="tablaTPl table table-hover table-striped" value="#{indexBean.lista}" var="conferencia" columnClasses="td-id,td-center,td-center,td-center,td-btn3,td-id">
+
+                                    <h:column>
+                                        <img src="resources/img/logo_bbb.png" class="img" width="20" height="20">
+                                        </img>
+                                    </h:column>
+
+                                    <h:column>
+                                        <f:facet name="header">#{msgs.indexHeaderConferencia}</f:facet>
+                                        <h:outputLabel class="celda" value="#{conferencia.tipoConferencia? ('['.concat(msgs.indexConferenciaPrivada).concat('] '.concat(conferencia.nombre))) :conferencia.nombre}"/> 
+
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">#{msgs.indexHeaderEstado}</f:facet>
+
+                                        <h:outputLabel class="celda" value="#{indexBean.getResource(conferencia.idEstadoConferencia.nombre)}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">#{msgs.indexHeaderPrograma}</f:facet>
+                                        <h:outputLabel class="celda" value="#{conferencia.idUsuarioXPrograma.idPrograma.nombre}"/> 
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">-</f:facet>
+                                        <h:commandLink rendered="#{conferencia.idEstadoConferencia.idEstadoConferencia eq 2}" class="btn btn-xs btn-info" value="#{msgs.indexBtnUnirseValue}"  title="#{msgs.indexBtnUnirseTitle}" onclick="$('#modalDatosP').modal('show');">
+                                            <f:setPropertyActionListener target="#{indexBean.conferencia}" value="#{conferencia}"/>
+                                            <f:ajax render=":frmModalDatosP"/>
+                                        </h:commandLink>
+                                        <h:outputLabel rendered="#{conferencia.idEstadoConferencia.idEstadoConferencia eq 1}" styleClass="label label-default center-block" style="font-size: 14px" value="#{conferencia.fechaPonencia} #{conferencia.horaPonencia}"/>
+                                    </h:column>
+                                    <h:column>							 
+                                        <f:facet name="header">-</f:facet>
+                                        <h:commandLink class="glyphicon glyphicon-info-sign" title="#{msgs.indexInfoVideoConferencia}" onclick="$('#modalInformacion').modal('show');">
+                                            <f:setPropertyActionListener target="#{indexBean.conferencia}" value="#{conferencia}"/>
+                                            <f:ajax render=":frmModalInformacion"/>
+                                        </h:commandLink>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+
+                            <!-- Conferencias grabadas  -->
+                            <br></br>   
+                            <div id="conferenciasGrabadas" class="centered-heading">
+                                <h4>
+                                    <h:outputLabel id="txtTituloGra" value="#{msgs.indexHeaderTblGrabaciones}" />
+                                    <div class="pull-right">
+                                        <h:form onkeypress="return event.keyCode !== 13;">                      
+                                            <input id="filterPl" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrarPl('.concat(indexBean.listaGrabaciones.size())).concat(')')}"></input>
+                                        </h:form>
+                                    </div> 
+                                </h4>
+                                <h:dataTable  id="dtConfGrabadas" styleClass="paginacion tablaPl table table-hover table-striped" value="#{indexBean.listaGrabaciones}" var="grabacion" columnClasses="td-id,td-center,td-center,td-center,td-btn,td-btn">
+                                    <h:column>
+                                        <img src="resources/img/logo_play.png" class="img" width="20" height="20">
+                                        </img>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">#{msgs.indexHeaderGrabacion}</f:facet>
+                                        <h:outputLabel class="celda" value="#{grabacion.tipoConferencia? ('['.concat(msgs.indexConferenciaPrivada).concat('] '.concat(grabacion.nombre))):grabacion.nombre}"/>   
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">#{msgs.indexHeaderPrograma}</f:facet>
+                                        <h:outputLabel class="celda" value="#{grabacion.idUsuarioXPrograma.idPrograma.nombre}"/> 
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">#{msgs.Fecha}</f:facet>
+                                        <h:outputLabel class="celda" value="#{grabacion.fechaPonencia}"/>
+                                        
+                                    </h:column>
+                                    
+                                    <h:column>
+                                        <f:facet name="header">-</f:facet>
+                                        <h:commandLink class="btn btn-xs btn-success" value="#{msgs.indexBtnReproducir}"  title="#{msgs.indexBtnReproducirTitle}" action="#{indexBean.redirectGrabacion()}">
+                                            <f:setPropertyActionListener target="#{indexBean.grabacion}" value="#{grabacion}"/>
+                                        </h:commandLink>
+                                    </h:column>
+                                    <h:column>							 
+                                        <f:facet name="header">-</f:facet>
+                                        <h:commandLink class="glyphicon glyphicon-info-sign" title="#{msgs.indexInfoGrabacion}" onclick="$('#modalInformacionG').modal('show');">
+                                            <f:setPropertyActionListener target="#{indexBean.grabacion}" value="#{grabacion}"/>
+                                            <f:ajax render=":frmModalInformacionG"/>
+                                        </h:commandLink>
+                                    </h:column>
+                                </h:dataTable>
+                                <div class="col-sm-12">
+                                    <center>
+                                        <div class="paging-container " id="tablePaging">
+
+                                        </div>
+                                    </center>                                        
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </h:form> 
+
+                </div>
+
+                <h:form id="myForm">
+                    <h:commandButton styleClass="reload" id="btnLoadData" value="Hidden" style="display:none" action="#{indexBean.refresh()}">
+                        <f:ajax execute="@form" render=":frmConferencias" />
+                    </h:commandButton>
+                </h:form>
+            </ui:define>	
+
+        </ui:composition>
+
+        <!-- 1. MODAL: DATOS PERSONALES -->
+        <div class="modal fade" id="modalDatosP" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <h:form id="frmModalDatosP" >
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+
+                        <!-- 1.1 ENCABEZADO DEL MODAL -->
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <h:outputLabel id="txtTitulo" value="#{msgs.indexMdlDatosHeader}" />
+                            </h4>
+                        </div> <!-- 1.1 FIN: ENCABEZADO DEL MODAL -->
+
+                        <!-- 1.2 CAMPOS DEL MODAL -->
+                        <div class="modal-body">
+                            <h:outputLabel for="txtNombrePer" value="#{msgs.indexMdlDatosNombre}"></h:outputLabel>
+                            <h:inputText id="txtNombrePer" class="form-control" p:placeholder="#{msgs.indexMdlDatosNombre}" value="#{indexBean.usuarioBbb}">
+                                <f:ajax   event="blur"/>
+                            </h:inputText>
+                            <br></br>
+                            <h:outputLabel for="txtCantidadUsu" value="#{msgs.indexMdlDatosCantPersonas}" > &nbsp; &nbsp;<a href="" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="#{msgs.indexMdlDatosTooltip}"></a></h:outputLabel>
+                            <h:inputText id="txtCantidadUsu" class="form-control" p:placeholder="#{msgs.indexMdlDatosCantPersonas}" value="#{indexBean.cantidadParticipantes}">
+                                <f:ajax   event="blur"/>
+                            </h:inputText>
+                            <h:outputLabel rendered="#{indexBean.conferencia.tipoConferencia}" for="txtPasswprd">#{msgs.indexMdlDatosPassword}</h:outputLabel>
+                            <h:inputText rendered="#{indexBean.conferencia.tipoConferencia}"  id="txtPasswprd" class="form-control" p:placeholder="#{msgs.indexMdlDatosPassword}" value="#{indexBean.passwordBbb}">
+                                <f:ajax   event="blur"/>
+                            </h:inputText>
+
+
+                        </div> <!-- 1.2 FIN: CAMPOS DEL MODAL -->
+
+                        <!-- 1.3 BOTONES DEL MODAL -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.indexCancelar}</button>
+                            <h:commandLink value="#{msgs.indexBtnUnirseValue}" action="#{indexBean.redirectInvitado}" id="btnRedirect" class="btn btn-primary" onclick="$('#modalDatosP').modal('hide');">
+                            </h:commandLink>            
+                        </div> <!-- 1.3 FIN: BOTONES DEL MODAL JSTL-->
+
+                    </div>
+                </div>
+            </h:form>									
+        </div> <!-- 1. CIERRE DEL MODAL DE DATOS PERSONALES-->
+
+
+        <!-- 2. MODAL: INFORMACION -->
+        <div class="modal fade" id="modalInformacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <h:form id="frmModalInformacion" >
+                <div class="modal-dialog modal-content" role="document">
+                    <div class="modal-content">
+
+                        <!-- 2.1 ENCABEZADO DEL MODAL -->
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <h:outputLabel id="txtTitulo" value="#{indexBean.conferencia.nombre}" />
+                            </h4>
+                        </div> <!-- 2.1 FIN: ENCABEZADO DEL MODAL -->
+
+                        <!-- 2.2 CAMPOS DEL MODAL -->
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:outputLabel styleClass="label label-default center-block" style="font-size: 14px" value="#{msgs.indexHeaderPrograma}"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h:outputLabel value="#{indexBean.conferencia.idUsuarioXPrograma.idPrograma.nombre}"></h:outputLabel>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:outputLabel styleClass="label label-default center-block" style="font-size: 14px" value="#{msgs.conferenciaFechaPonencia}"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h:outputLabel value="#{indexBean.conferencia.fechaPonencia} #{indexBean.conferencia.horaPonencia}"></h:outputLabel>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:outputLabel styleClass="label label-default center-block" style="font-size: 14px" value="#{msgs.indexDescripcion}"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h:outputLabel value="#{indexBean.conferencia.descripcion}"></h:outputLabel>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:outputLabel styleClass="label label-default center-block" style="font-size: 14px" value="#{msgs.indexPonentes}" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <h:inputTextarea class="form-control"  rows="5" value="#{indexBean.conferencia.ponentes}" disabled="true" style="background-color: white; resize: none;">
+                                        <f:ajax   event="blur"/>
+                                    </h:inputTextarea>
+                                </div>
+                            </div>
+                            <br></br>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:outputLabel styleClass="label label-default center-block" style="font-size: 14px" value="#{msgs.indexModeradores}"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h:inputTextarea class="form-control"  rows="5" value="#{indexBean.conferencia.moderadores}" disabled="true" style="background-color: white; resize: none;">
+                                        <f:ajax   event="blur"/>
+                                    </h:inputTextarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:outputLabel rendered="!#{indexBean.conferencia.recordingurl eq null}" styleClass="label label-default center-block" style="font-size: 14px" value="#{msgs.indexEnlace}"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h:outputLabel rendered="!#{indexBean.conferencia.recordingurl eq null}" value="#{indexBean.conferencia.recordingurl}"></h:outputLabel>
+                                </div>
+                            </div>
+
+                        </div> <!-- 2.2 FIN: CAMPOS DEL MODAL -->
+
+                        <!-- 2.3 BOTONES DEL MODAL -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.indexCerrar}</button>
+
+                        </div> <!-- 2.3 FIN: BOTONES DEL MODAL JSTL-->
+
+                    </div>
+                </div>
+            </h:form>									
+        </div> <!-- 2. CIERRE DEL MODAL DE DATOS PERSONALES-->
+
+
+        <!-- 3. MODAL: INFORMACION -->
+        <div class="modal fade" id="modalInformacionG" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <h:form id="frmModalInformacionG" >
+                <div class="modal-dialog modal-content" role="document">
+                    <div class="modal-content">
+
+                        <!-- 3.1 ENCABEZADO DEL MODAL -->
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <h:outputLabel id="txtTitulo" value="#{indexBean.grabacion.nombre}" />
+                            </h4>
+                        </div> <!-- 3.1 FIN: ENCABEZADO DEL MODAL -->
+
+                        <!-- 3.2 CAMPOS DEL MODAL -->
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:outputLabel styleClass="label label-default center-block" style="font-size: 14px" value="#{msgs.indexHeaderPrograma}"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h:outputLabel value="#{indexBean.grabacion.idUsuarioXPrograma.idPrograma.nombre}"></h:outputLabel>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:outputLabel styleClass="label label-default center-block" style="font-size: 14px" value="#{msgs.conferenciaFechaPonencia}"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h:outputLabel value="#{indexBean.grabacion.fechaPonencia} #{indexBean.grabacion.horaPonencia}"></h:outputLabel>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:outputLabel styleClass="label label-default center-block" style="font-size: 14px" value="#{msgs.indexDescripcion}"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h:outputLabel value="#{indexBean.grabacion.descripcion}"></h:outputLabel>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:outputLabel styleClass="label label-default center-block" style="font-size: 14px" value="#{msgs.indexPonentes}" />
+                                </div>
+                                <div class="col-sm-9">
+                                    <h:inputTextarea class="form-control"  rows="5" value="#{indexBean.grabacion.ponentes}" disabled="true" style="background-color: white; resize: none;">
+                                        <f:ajax   event="blur"/>
+                                    </h:inputTextarea>
+                                </div>
+                            </div>
+                            <br></br>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:outputLabel styleClass="label label-default center-block" style="font-size: 14px" value="#{msgs.indexModeradores}"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h:inputTextarea class="form-control"  rows="5" value="#{indexBean.grabacion.moderadores}" disabled="true" style="background-color: white; resize: none;">
+                                        <f:ajax   event="blur"/>
+                                    </h:inputTextarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:outputLabel styleClass="label label-default center-block" style="font-size: 14px" value="#{msgs.indexEnlace}"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h:outputLabel value="#{indexBean.getEnlace()}"></h:outputLabel>
+                                </div>
+                            </div>
+
+                        </div> <!-- 3.2 FIN: CAMPOS DEL MODAL -->
+
+                        <!-- 3.3 BOTONES DEL MODAL -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.indexCerrar}</button>
+
+                        </div> <!-- 3.3 FIN: BOTONES DEL MODAL JSTL-->
+
+                    </div>
+                </div>
+            </h:form>									
+        </div> <!-- 3. CIERRE DEL MODAL DE DATOS PERSONALES-->
+    </h:body>
+
+</html>

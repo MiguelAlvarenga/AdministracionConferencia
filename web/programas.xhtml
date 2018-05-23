@@ -1,0 +1,382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XTHML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<link rel="icon" type="image/png" href="#{resource['img/logo_bbb.png']}" />		
+		<title>Administrador de Conferencias</title>
+
+		<h:outputScript library="js" name="jquery-2.2.3.js" />
+		<h:outputScript library="js" name="bootstrap.js" />
+		<h:outputScript library="js" name="pagination.js" />
+		<h:outputScript library="js" name="paginationW.js" />
+		<h:outputScript library="js" name="programa.js" />
+
+		<h:outputStylesheet library="css" name="bootstrap.css" />
+		<h:outputStylesheet library="css" name="plantilla_maestra.css" />
+		<h:outputStylesheet library="css" name="general.css" />
+		<h:outputStylesheet library="css" name="table.css" />
+		<h:outputStylesheet library="css" name="pagination.css" />
+	</h:head>
+
+	<h:body onload="load(#{programaBean.lista.size()})">
+		<ui:composition template="template/plantillaPrincipal.xhtml">
+			<ui:define name="content">
+				<div class="bg-lr-padding">												
+
+					<div id="contenedorMensajes">
+                                            <h:outputScript library="js" name="mensajesError.js" />
+						<h:form id="frmMensajeGlobal">
+							<h:messages/>
+						</h:form>
+					</div>
+
+					<h4>#{msgs.programaMsjPrincipal}</h4>
+					#{msgs.programaDescripcion}
+					<br/><br/><br/>
+
+					<h:form>
+						<h:commandLink class="btn btn-primary" value="#{msgs.programaBtnNuevo}">
+							<f:actionListener binding="#{programaBean.limpiar()}"/>
+							<f:actionListener binding="#{programaBean.setNuevo(true)}"/>
+							<f:actionListener binding="#{programaBean.usuarioSesion(sesionUBean.usuario)}"/>    
+							<f:ajax render=":frmModalEditar" onevent="mostrarModalEditarPrograma"/>
+						</h:commandLink>
+					</h:form>
+
+					<br/>
+					<h:form onkeypress="return event.keyCode !== 13;">                      
+						<input id="filter" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrar('.concat(programaBean.lista.size())).concat(')')}"></input>
+					</h:form>
+					<h:form id="frmPrincipal">
+						<div class="table-responsive centered-heading">
+							<h:dataTable id="dtPrincipal" styleClass="paginacion table table-hover table-striped table-bordered" columnClasses="td-id, td-left, td-left, td-left, td-center, td-btn2" value="#{programaBean.getLista()}" var="programa">
+
+								<h:column>
+									<f:facet name="header">Id</f:facet>
+									<h:outputLabel class="celda" value="#{programa.idPrograma}"/>
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs.usuarioHeaderNombre}</f:facet>
+									<h:outputLabel class="celda" value="#{programa.nombre}"/> 
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs.usuarioHeaderUsuario}</f:facet>
+									<h:outputLabel class="celda" value="#{programa.idUsuario.usuario}"/> 
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs.usuarioHeaderEstado}</f:facet>
+									<h:outputLabel class="celda" value="#{programa.activo? 'Activo': 'Inactivo'}"/>
+								</h:column>
+
+
+								<h:column>
+									<f:facet name="header">#{msgs.programaFechaCrea}</f:facet>
+									<h:outputLabel class="celda" value="#{programa.fechaCreacion}">
+										<f:convertDateTime pattern="dd/MM/yyyy"/>
+									</h:outputLabel>
+								</h:column>
+
+
+								<h:column>
+									<f:facet name="header">-</f:facet>											
+									<h:commandLink class="glyphicon glyphicon-edit" title="#{msgs.usuarioTitleEditar}">
+										<f:actionListener binding="#{programaBean.setNuevo(false)}" />
+										<f:setPropertyActionListener target="#{programaBean.programa}" value="#{programa}"/>
+										<f:setPropertyActionListener target="#{programaBean.idUsuarioAux}" value="#{programa.idUsuario.idUsuario}"/>
+										<f:ajax render=":frmModalEditar" />
+										<f:ajax onevent="mostrarModalEditarPrograma" />
+									</h:commandLink>
+									&nbsp; &nbsp;
+									<h:commandLink class="glyphicon glyphicon-remove" title="#{msgs.usuarioTitleEliminar}">
+										<f:setPropertyActionListener target="#{programaBean.programa}" value="#{programa}"/>
+										<f:ajax render=":frmModalEliminar" />
+										<f:ajax onevent="mostrarModalEliminarPrograma" />
+									</h:commandLink>
+									&nbsp; &nbsp;
+									<h:commandLink class="glyphicon glyphicon-user" title="#{msgs.programaAsociar}" >
+										<f:setPropertyActionListener target="#{programaBean.programa}" value="#{programa}"/>
+										<f:setPropertyActionListener target="#{programaAuxBean.programa}" value="#{programa}"/>
+										<f:actionListener binding="#{programaBean.obtenerUsuariosHab()}" />
+										<f:actionListener binding="#{programaBean.obtenerUsuariosDeshab()}" />
+										<f:ajax render=":frmModalRegistro" />
+										<f:ajax onevent="mostrarModalAsociarUsuario"/>
+									</h:commandLink>
+								</h:column>
+
+							</h:dataTable>
+						</div>
+
+						<center>
+							<div class="paging-container " id="tablePaging">
+							</div>
+						</center>  
+
+					</h:form>
+
+				</div> 
+
+			</ui:define>
+		</ui:composition>
+
+		<!-- 4. MODAL: FORMULARIO PARA VER/EDITAR/CREAR REGISTROS-->
+		<div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<h:form id="frmModalEditar" >
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+
+						<!-- 4.1 ENCABEZADO DEL MODAL -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="myModalLabel">
+								<h:outputLabel id="txtTitulo" value="#{programaBean.tituloModal}" />
+							</h4>
+						</div> <!-- 4.1 FIN: ENCABEZADO DEL MODAL -->
+
+						<!-- 4.2 CAMPOS DEL MODAL -->
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-sm-6">
+									<label>Id:</label>
+									<h:inputText id="txtId" class="form-control" p:placeholder="Id" value="#{programaBean.programa.idPrograma}" readonly="true"/>
+									<br/>
+								</div>
+								<div class="col-sm-6">
+									<label>#{msgs.usuarioHeaderUsuario}:</label>
+									<h:inputText id="txtUsuario" p:placeholder="#{msgs.usuarioHeaderUsuario}. Único" class="form-control" value="#{programaBean.programa.idUsuario.usuario}" readonly="true"/>
+									<br/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<label>#{msgs.usuarioHeaderNombre}: </label>
+                                                                        <h:inputText required="true" immediate="true" id="txtNombre" class="form-control" p:placeholder="#{msgs.usuarioHeaderNombre}" value="#{programaBean.programa.nombre}" label=" ">
+										<f:validateRequired/>
+										<f:validateLength minimum="5" maximum="100"/>
+										<f:ajax event="blur" render="txtNombreVal"/>
+									</h:inputText>
+									<small class="text-muted red-color-text"> <h:message id="txtNombreVal" for="txtNombre" /> </small>
+									<br/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<label>#{msgs.etiquetaHeader2}: </label>
+									<h:inputTextarea id="txtDescripcion" class="form-control" p:placeholder="#{msgs.etiquetaHeader2}" value="#{programaBean.programa.descripcion}" style="resize: none;" label=" ">
+										<f:validateLength maximum="500"/>
+										<f:ajax event="blur" render="txtDescripcionVal"/>
+									</h:inputTextarea>
+									<small class="red-color-text"> <h:message id="txtDescripcionVal" for="txtDescripcion" /> </small>
+									<br/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<label>#{msgs.usuarioHeaderEstado}: </label>
+									<h:panelGrid columns="2">									
+										<h:selectOneRadio id="tablrestado" class="table"  value="#{programaBean.programa.activo}">
+											<f:selectItem itemValue="true" itemLabel=" #{msgs.usuarioActivo}"  />
+											<f:selectItem  itemValue="false" itemLabel=" #{msgs.usuarioInactivo}" />
+											<f:ajax   event="blur"/>
+										</h:selectOneRadio>
+									</h:panelGrid>
+								</div>
+							</div>
+							<c:if test="${!programaBean.nuevo}">
+								<div class="row">
+									<div class="col-sm-12">																
+										<label>#{msgs.programaFechaCrea}:</label>
+										<h:inputText id="txtFecha" p:placeholder="#{msgs.programaFechaCrea}" class="form-control" value="#{programaBean.programa.fechaCreacion}" readonly="true"/>
+										<br/>
+									</div>
+								</div>
+							</c:if>
+						</div> <!-- 4.2 FIN: CAMPOS DEL MODAL -->
+
+						<!-- 4.3 BOTONES DEL MODAL -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
+							<h:commandLink id="btnGuardar" class="btn btn-primary" value="#{msgs.btnGuardar}" immediate="true" onclick="$('#modalEditar').modal('hide');">
+								<f:actionListener binding="#{programaBean.guardar()}" />
+								<f:actionListener binding="#{programaBean.obtenerTodos()}" />
+								<f:ajax render=":frmModalEditar :frmPrincipal :frmMensajeGlobal" onevent="#{('function(data) { loadInsert(data,'.concat(programaBean.lista.size())).concat(') }')}" />
+							</h:commandLink>
+						</div> <!-- 4.3 FIN: BOTONES DEL MODAL -->
+
+					</div>
+				</div>
+			</h:form>									
+		</div> <!-- 4. CIERRE DEL MODAL DE EDITAR-->
+
+
+		<!-- 5. MODAL: FORMULARIO PARA ELIMINAR REGISTROS-->
+		<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<h:form id="frmModalEliminar">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+
+						<!-- 5.1 ENCABEZADO DEL MODAL -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="myModalLabel">
+								<h:outputLabel id="txtTitulo" value="#{msgs.programaEliminar}" />
+							</h4>
+						</div> <!-- 5.1 FIN: ENCABEZADO DEL MODAL -->
+
+						<!-- 5.2 MENSAJE DEL MODAL -->
+						<div id="ContFormEliminar" class="modal-body">
+							#{msgs.eliminarRegistro}
+						</div> <!-- 5.2 FIN: MENSAJE DEL MODAL -->
+
+						<!-- 5.3 BOTONES DEL MODAL -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
+							<h:commandLink id="btnEliminar" class="btn btn-danger" value="#{msgs.btnEliminar}" onclick="$('#modalEliminar').modal('hide');">
+								<f:actionListener binding="#{programaBean.eliminar()}" />
+								<f:ajax render=":frmPrincipal :frmMensajeGlobal" />
+							</h:commandLink>	
+						</div> <!-- 5.3 FIN: BOTONES DEL MODAL -->
+
+					</div>
+				</div>
+			</h:form>											
+		</div> <!-- 5. CIERRE DEL MODAL DE ELIMINAR-->
+
+
+
+
+		<!-- 6. MODAL: REGISTRO-->
+		<div class="modal fade" id="modalRegistro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<h:form id="frmModalRegistro">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+
+						<!-- 6.1 ENCABEZADO DEL MODAL -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="myModalLabel">
+								<h:outputLabel id="txtTitulo" value="#{msgs.programaUsuarios} - #{programaBean.programa.nombre}" class="puntos-suspensivos"/>
+							</h4>
+						</div> <!-- 6.1 FIN: ENCABEZADO DEL MODAL -->
+
+						<!-- 6.2 MENSAJE DEL MODAL -->
+						<div id="ContFormRegistro" class="modal-body">
+
+							<div id="ContenidoPrincipalRegistro">
+								<div class="bg-lr-padding">	
+									<br/>
+									<div class="row">
+										<div class="col-sm-6">
+
+											<label style="text-align:center">#{msgs.programaNoUsuarios}</label>
+
+											<div class="table-responsive centered-heading">
+												<h:form onkeypress="return event.keyCode !== 13;">
+													<input id="filterUsuNo" type="text" class="form-control" placeholder="..." onkeyup="filtrarUsuNo(#{programaBean.listaUsuariosDeshabilitados.size()})"></input>
+												</h:form>
+												<h:dataTable id="dtRegistro2" styleClass="tablaUsuNo table table-hover table-striped table-condensed" columnClasses="td-left,td-left,td-lef, td-btn" value="#{programaBean.listaUsuariosDeshabilitados}" var="listaDes">
+
+													<h:column >
+														<f:facet name="header">#{msgs.usuarioHeaderNombre}</f:facet>
+														<h:outputLabel class="celda" value="#{listaDes.nombre}"/> 
+													</h:column>
+
+													<h:column >
+														<f:facet name="header">#{msgs.usuarioHeaderApellido}</f:facet>
+														<h:outputLabel class="celda" value="#{listaDes.apellido}"/> 
+													</h:column>
+
+													<h:column >
+														<f:facet name="header">#{msgs.usuarioHeaderUsuario}</f:facet>
+														<h:outputLabel class="celda" value="#{listaDes.usuario}"/> 
+													</h:column>
+
+													<h:column>
+														<f:facet name="header">-</f:facet>
+														<h:commandLink class="glyphicon glyphicon-plus" title="#{msgs.programaAgregar}">
+															<f:setPropertyActionListener target="#{programaBean.usuario}" value="#{listaDes}"/>
+															<f:actionListener binding="#{programaBean.asociar()}" />
+															<f:ajax render=":frmModalRegistro" />
+														</h:commandLink>
+													</h:column>
+
+												</h:dataTable>
+											</div>
+										</div>
+
+										<div class="col-sm-6">
+
+											<label style="text-align:center">#{msgs.programaUsuarios}</label>
+
+											<div class="table-responsive centered-heading">
+												<h:form onkeypress="return event.keyCode !== 13;">                      
+													<input id="filterUsuSi" type="text" class="form-control" placeholder="..." onkeyup="filtrarUsuSi(#{programaBean.listaUsuariosHabilitados.size()})" />
+												</h:form>
+												<h:dataTable id="dtRegistro" styleClass="tablaUsuSi table table-hover table-striped table-condensed" columnClasses="td-left,td-left,td-lef, td-btn" value="#{programaBean.listaUsuariosHabilitados}" var="listaHab">
+
+													<h:column >
+														<f:facet name="header">#{msgs.usuarioHeaderNombre} </f:facet>
+														<h:outputLabel class="celda" value="#{listaHab.nombre}"/> 
+													</h:column>
+
+													<h:column >
+														<f:facet name="header">#{msgs.usuarioHeaderApellido} </f:facet>
+														<h:outputLabel class="celda" value="#{listaHab.apellido}"/> 
+													</h:column>
+
+													<h:column >
+														<f:facet name="header">#{msgs.usuarioHeaderUsuario} </f:facet>
+														<h:outputLabel class="celda" value="#{listaHab.usuario}"/> 
+													</h:column>
+
+													<h:column>
+														<f:facet name="header">-</f:facet>
+														<h:commandLink class="glyphicon glyphicon-minus" title="#{msgs.programaRemover}">
+															<f:setPropertyActionListener target="#{programaBean.usuario}" value="#{listaHab}"/>
+															<f:actionListener binding="#{programaBean.remover()}" />
+															<f:ajax render=":frmModalRegistro"/>
+														</h:commandLink>
+													</h:column>
+
+												</h:dataTable>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> <!-- FIN: 3.2 SESIÓN - CONTENIDO PRINCIPAL -->
+
+						</div> <!-- 6.2 FIN: MENSAJE DEL MODAL -->
+
+						<!-- 6.3 BOTONES DEL MODAL -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCerrar}</button>
+							<h:commandButton class="btn btn-primary" id="btnRecargar" value="#{msgs.programaRefresh}" title="Refrescar listas de Usuarios.">
+								<f:setPropertyActionListener target="#{programaBean.programa}" value="#{programaAuxBean.programa}"/>
+								<f:actionListener binding="#{programaBean.obtenerUsuariosHab()}" />
+								<f:actionListener binding="#{programaBean.obtenerUsuariosDeshab()}" />
+								<f:ajax render=":frmModalRegistro" />
+							</h:commandButton>
+						</div> <!-- 6.3 FIN: BOTONES DEL MODAL -->
+
+					</div>
+				</div>
+			</h:form>					
+
+		</div> <!-- 6. CIERRE DEL MODAL DE REGISTROS-->
+
+		<br/>
+		<br/>
+
+	</h:body>
+
+</html>

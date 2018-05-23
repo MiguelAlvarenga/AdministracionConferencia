@@ -1,0 +1,121 @@
+
+/* COLORES DE FONDO Y DE TEXTO */
+
+.black-color{
+	background-color: black !important;
+}
+
+.black-color-text{
+	color: black !important;
+}
+
+.gray3-color{
+	background-color: #333333 !important;
+}
+.gray3-color-text{
+	color: #333333 !important;
+}
+
+.red-color-text{
+	color: #AA0000 !important;
+}
+
+/* TAMAÑOS DE MARGENES Y PADDING */
+
+.xs-tb-padding{
+	padding-top: 4px;
+	padding-bottom: 4px;	
+}
+
+.sm-tb-padding{
+	padding-top: 8px;
+	padding-bottom: 8px;	
+}
+
+.md-tb-padding{
+	padding-top: 15px;
+	padding-bottom: 15px;	
+}
+
+.bg-tb-padding{
+	padding-top: 25px;
+	padding-bottom: 25px;	
+}
+
+.sm-lr-padding{
+	padding-left: 8px;
+	padding-right: 8px;	
+}
+
+.md-lr-padding{
+	padding-left: 15px;
+	padding-right: 15px;	
+}
+
+.bg-lr-padding{
+	padding-left: 25px;
+	padding-right: 25px;	
+}
+
+.xb-lr-padding{
+	padding-left: 35px;
+	padding-right: 35px;	
+}
+
+/* OTRAS PROPIEDADES */
+
+.puntos-suspensivos{
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+}
+
+.sin-subrayado{
+	text-decoration: none;
+}
+
+.sin-subrayado:hover{
+	text-decoration: none;
+}
+
+#infoConferencia{
+    height: 550px;
+    
+}
+
+#conferenciasGlobal, #conferenciasGlobalInfo{
+    height: 750px;
+    max-height: 750px;
+    overflow: auto;
+}
+
+
+/* PROPIEDADES SEGÚN TAMAÑO DE LA PANTALLA */
+
+@media screen and (min-width: 768px) {
+
+	.visible-only-small-devices{
+		display:none;
+	}
+
+}
+
+@media screen and (max-width: 767px) {
+
+	.visible-only-large-devices{
+		display:none;
+	}
+        
+        #infoConferencia{
+            height: 120px;
+	
+        }
+        
+        #conferenciasGlobalInfo{
+            height: 150px;
+	
+        }
+        
+        
+
+}

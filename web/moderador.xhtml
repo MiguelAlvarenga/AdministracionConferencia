@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="es" xml:lang="es" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="icon" type="image/png" href="#{resource['img/logo_bbb.png']}" />		
+        <title>Administrador de Conferencias</title>
+
+        <h:outputScript library="js" name="jquery-2.2.3.js" />
+        <h:outputScript library="js" name="bootstrap.js" />
+
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="plantilla_maestra.css" />
+        <h:outputStylesheet library="css" name="general.css" />
+        <h:outputStylesheet library="css" name="table.css" />
+    </h:head>
+    <h:body>
+        <ui:composition template="template/plantillaPrincipal.xhtml">
+            <ui:define name="content">
+                <div class="bg-lr-padding">												
+                    <div id="contenedorMensajes">
+                        <h:outputScript library="js" name="mensajesError.js" />
+                        <h:form id="frmMensajeGlobal">
+                            <h:messages/>
+                        </h:form>
+                    </div>
+
+
+                    <br />
+                    <h3><h:outputLabel value="#{moderadorBean.titulo}"/></h3>
+                    <h:form id="frmModerador" rendered="#{moderadorBean.flag}">                    
+                        <br/>
+                        #{msgs.ModerTitulo}
+                        <br/><br/>
+                        <h:commandLink id="btnIniciar" class="btn btn-primary" value="#{msgs.ModerIniciar}" onclick="$('#modalDatosP').modal('show');">
+                            <f:ajax render=":frmModalDatosP"/>
+                        </h:commandLink>
+                        <h:commandLink id="btnDetener" class="btn btn-danger" value="#{msgs.ModerDetener}" onclick="$('#modalFinalizar').modal('show');">
+                            <f:ajax render=":frmModalFinalizar"/>
+                        </h:commandLink>
+                        <!-- 4.2 CAMPOS DEL MODAL -->
+                        <h4>#{msgs.ModerInfo}</h4>
+                        <div class="row">
+                            <div class="col-sm-2"></div>
+                            <div class="table-responsive col-sm-8">
+                                <h:dataTable id="dtInfo" styleClass="table table-hover table-striped table-condensed" value="#{moderadorBean.infoConferencia}" var="lista">
+                                    <f:facet name="header">#{msgs.ModerInformacion}
+                                        <h:commandLink id="btnDetener" class=" btn-xs btn btn-warning" value="#{msgs.programaRefresh}" action="#{moderadorBean.refresh()}">
+                                            <f:ajax render=":frmModerador"/>
+                                        </h:commandLink></f:facet>
+                                    <h:column>
+                                        <h:outputLabel class="celda" value="#{lista.split('-')[0]}"/>          
+                                    </h:column>
+                                    <h:column>
+                                        <h:outputLabel class="celda" value="#{lista.split('-')[1]}"/>          
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <div class="col-sm-2"></div>
+                        </div>
+
+                    </h:form>									
+
+                </div>
+            </ui:define>	
+
+        </ui:composition>
+
+        <!-- 1. MODAL: DATOS PERSONALES -->
+        <div class="modal fade" id="modalDatosP" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <h:form id="frmModalDatosP" >
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+
+                        <!-- 1.1 ENCABEZADO DEL MODAL -->
+                        <div class="modal-header">
+                            <button name="btnDatos" id="btnDatos" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <h:outputLabel id="txtTitulo" value="#{msgs.ModerNombreMostrar}" />
+                            </h4>
+                        </div> <!-- 1.1 FIN: ENCABEZADO DEL MODAL -->
+
+                        <!-- 1.2 CAMPOS DEL MODAL -->
+                        <div class="modal-body">
+                            <h:outputLabel for="txtNombrePer">#{msgs.usuarioHeaderNombre}</h:outputLabel>
+                            <h:inputText id="txtNombrePer" class="form-control" p:placeholder="#{msgs.usuarioHeaderNombre}" value="#{moderadorBean.usuarioBbb}">
+                                <f:ajax   event="blur"/>
+                            </h:inputText>
+
+                        </div> <!-- 1.2 FIN: CAMPOS DEL MODAL -->
+
+                        <!-- 1.3 BOTONES DEL MODAL -->
+                        <div class="modal-footer">
+                            <button id="btnCancelarDatos" name="btnCancelarDatos" type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
+                            <h:commandLink value="#{msgs.ModerIniciar}" target="_new" action="#{moderadorBean.redirect}" id="btnRedirect" class="btn btn-primary" onclick="$('#modalDatosP').modal('hide');">
+                            </h:commandLink>
+
+
+
+                        </div> <!-- 1.3 FIN: BOTONES DEL MODAL JSTL-->
+
+                    </div>
+                </div>
+            </h:form>									
+        </div> <!-- 1. CIERRE DEL MODAL DE DATOS PERSONALES-->	
+
+
+        <div class="modal fade" id="modalFinalizar"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <h:form id="frmModalFinalizar">
+
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+
+                        <!-- 5.1 ENCABEZADO DEL MODAL -->
+
+                        <div class="modal-header">
+                            <button name="CerrarFinalizar" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <h:outputLabel id="txtTitulo" value="#{msgs.ModerDetenerWC}" />
+
+                            </h4>
+                        </div> <!-- 5.1 FIN: ENCABEZADO DEL MODAL -->
+
+
+                        <!-- 5.2 MENSAJE DEL MODAL -->
+                        <div id="ContFormEliminar" class="modal-body">
+                            #{msgs.ModerEstaSeguro} 
+                        </div> <!-- 5.2 FIN: MENSAJE DEL MODAL -->
+
+
+
+
+
+                        <!-- 5.3 BOTONES DEL MODAL -->
+
+                        <div class="modal-footer">
+                            <button name="btnCancelarFin" id="btnCancelarFin" type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
+                            <h:commandLink id="btnFinalizar" class="btn btn-danger" value="#{msgs.ModerDetener}" onclick="$('#modalFinalizar').modal('hide');">
+                                <f:actionListener binding="#{moderadorBean.terminarVC()}"></f:actionListener>
+                                <f:ajax render=":frmMensajeGlobal"/>
+                            </h:commandLink>	
+                        </div> <!-- 5.3 FIN: BOTONES DEL MODAL -->
+
+
+                    </div>
+                </div>
+            </h:form>											
+        </div> <!-- 5. CIERRE DEL MODAL DE ELIMINAR-->
+
+    </h:body>
+</html>
+

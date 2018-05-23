@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      locale="#{localeBean.locale}">
+
+	<h:head></h:head>
+
+	<h:body class="body">
+		<div  class="container-fluid">
+			<ui:insert name="headerResponsive" >
+				<ui:include src="/template/headerResponsive.xhtml" />
+			</ui:insert> 	
+			<div class="row">
+
+				<ui:insert name="nav" >
+					<ui:include src="/template/nav.xhtml" />
+				</ui:insert> 
+				<div class="col-sm-2 col-xs-12"></div>
+
+				<div class="col-sm-10 col-xs-12 contenido-setting-dimensions contenido-color contenido-text-color">
+					<ui:insert name="headerNonResponsive" >
+						<ui:include src="/template/headerNonResponsive.xhtml" />
+					</ui:insert>
+
+					<div class="visible-only-small-devices">
+						<br/>
+					</div>					
+
+					<div id="ContenidoPrincipal">
+						<ui:insert name="content" >
+							<ui:include src="/template/content.xhtml" />
+						</ui:insert>
+						<br/><br/>
+					</div>
+					<ui:insert name="footer" >
+						<ui:include src="/template/footer.xhtml" />
+					</ui:insert> 
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<h:form id="frmModalLogin" >
+				<div class="modal-dialog modal-sm" role="document">
+					<div class="modal-content">
+
+						<!-- 4.1 ENCABEZADO DEL MODAL -->
+						<div class="modal-header">
+                                                    <button name="btnCerrar" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="myModalLabel">
+								<h:outputLabel id="txtTitulo" value="#{msgs.NavIniSesion}" />
+							</h4>
+						</div> <!-- 4.1 FIN: ENCABEZADO DEL MODAL -->
+
+						<!-- 4.2 CAMPOS DEL MODAL -->
+						<div class="modal-body">
+							<h:outputLabel for="txtUsuario">#{msgs.usuarioHeaderUsuario}</h:outputLabel>
+							<h:inputText id="txtUsuario" class="form-control" p:placeholder="#{msgs.NavNombreDUsusario}" value="#{sesionUBean.user}"/>
+							<h:outputLabel for="txtContrasena">#{msgs.usuarioHeaderContra}</h:outputLabel>
+							<h:inputSecret id="txtContrasena" class="form-control" p:placeholder="#{msgs.usuarioHeaderContra}" value="#{sesionUBean.password}">
+							</h:inputSecret>
+						</div> <!-- 4.2 FIN: CAMPOS DEL MODAL -->
+
+						<!-- 4.3 BOTONES DEL MODAL -->
+						<div class="modal-footer">
+                                                    <button name="btnCancelarInicioSesion" type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
+                                                    <h:commandLink actionListener="#{sesionUBean.iniciarSesion()}" action="#{sesionUBean.navRuleLogIn}" id="btnGuardar" class="btn btn-primary" value="#{msgs.NavConectar}" onclick="$('#modalLogin').modal('hide');">
+                                                    </h:commandLink>
+						</div> <!-- 4.3 FIN: BOTONES DEL MODAL JSTL-->
+
+					</div>
+				</div>
+			</h:form>									
+		</div> <!-- 4. CIERRE DEL MODAL DE EDITAR-->		
+	</h:body>
+        
+
+</f:view>
+

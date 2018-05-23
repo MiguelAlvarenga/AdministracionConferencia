@@ -1,0 +1,620 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XTHML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+        <link rel="icon" type="image/png" href="#{resource['img/logo_bbb.png']}" />		
+        <title>Administrador de Conferencias</title>
+
+        <h:outputScript library="js" name="jquery-2.2.3.js" />
+        <h:outputScript library="js" name="bootstrap.js" />
+        <h:outputScript library="js" name="trumbowyg.js" />		
+        <h:outputScript library="js" name="trumbowyg_load.js" />
+        <h:outputScript library="js" name="conferencia.js" />
+        <h:outputScript library="js" name="pagination.js" />
+        <h:outputScript library="js" name="paginationW.js" />
+
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="plantilla_maestra.css" />
+        <h:outputStylesheet library="css" name="main.css" />
+        <h:outputStylesheet library="css" name="trumbowyg.css" />
+        <h:outputStylesheet library="css" name="general.css" />
+        <h:outputStylesheet library="css" name="table.css" />
+        <h:outputStylesheet library="css" name="pagination.css" />
+    </h:head>
+
+    <h:body onload="load(#{conferenciaBean.lista.size()})">
+        <ui:composition template="template/plantillaPrincipal.xhtml">
+            <ui:define name="content">
+
+                <div class="bg-lr-padding">
+
+                    <div id="contenedorMensajes">
+                        <h:outputScript library="js" name="mensajesError.js" />
+                        <h:form id="frmMensajeGlobal">
+                            <h:messages/>
+                        </h:form>
+                    </div>
+
+                    <h4>#{msgs.conferenciaMsjPrincipal}</h4>
+                    #{msgs.conferenciaDescripcion}
+                    <br/><br/><br/>
+                    <h:form>
+                        <h:commandLink class="btn btn-primary" value="#{msgs.conferenciaBtnNuevo}" onclick="$('#modalEditar').modal('show');">
+                            <f:actionListener binding="#{conferenciaBean.limpiar()}"/>
+                            <f:actionListener binding="#{conferenciaBean.setIdUsuarioAux(sesionUBean.usuario.idUsuario)}" />
+                            <f:actionListener binding="#{conferenciaBean.setNuevo(true)}"/>
+                            <f:ajax render=":frmModalEditar"/>
+                        </h:commandLink>
+                    </h:form>
+
+                    <br/>
+
+                    <h:form onkeypress="return event.keyCode !== 13;">                      
+                        <input id="filter" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrar('.concat(conferenciaBean.lista.size())).concat(')')}"></input>
+                    </h:form>
+
+                    <h:form id="frmPrincipal">
+
+                        <div class="table-responsive centered-heading">
+                            <h:dataTable id="dtPrincipal" styleClass="paginacion table table-hover table-striped table-bordered" columnClasses="td-id, td-left, td-left, td-left, td-center, td-center, td-btn3" value="#{conferenciaBean.lista}" var="conferencia">
+
+                                <h:column>
+                                    <f:facet name="header">Id</f:facet>
+                                    <h:outputLabel class="celda" value="#{conferencia.idConferencia}"/>
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">#{msgs.usuarioHeaderNombre}</f:facet>
+                                    <h:outputLabel class="celda" value="#{conferencia.nombre}"/> 
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">#{msgs.indexHeaderPrograma}</f:facet>
+                                    <h:outputLabel class="celda" value="#{conferencia.idUsuarioXPrograma.idPrograma.nombre}"/> 
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">#{msgs.conferenciaFechaPonencia}</f:facet>
+                                    <h:outputLabel class="celda" value="#{conferenciaBean.getFechaStr(conferencia)}">
+                                    </h:outputLabel>
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">#{msgs.conferenciaTipo}</f:facet>
+                                    <h:outputLabel class="celda" value="#{conferencia.tipoConferencia? msgs.indexConferenciaPrivada:msgs.indexConferenciaPublica}"/> 
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">#{msgs.usuarioHeaderEstado}</f:facet>
+                                    <h:outputLabel class="celda" value="#{conferenciaBean.getResource(conferencia.idEstadoConferencia.nombre)}"/> 
+                                </h:column>
+<!-- aqui va el boton para generar el enlace-->
+                                <h:column>
+                                    <f:facet name="header">-</f:facet>											
+                                    <h:commandLink class="glyphicon glyphicon-edit" title="#{msgs.usuarioTitleEditar}" onclick="$('#modalEditar').modal('show');">
+                                        <f:actionListener binding="#{conferenciaBean.setNuevo(false)}" />
+                                        <f:actionListener binding="#{conferenciaBean.setFechaDate(conferencia.fechaPonencia)}" />
+                                        <f:actionListener binding="#{conferenciaBean.setIdUsuarioAux(sesionUBean.usuario.idUsuario)}" />
+                                        <f:actionListener binding="#{conferenciaBean.setIdEstadoAux(conferencia.idEstadoConferencia.idEstadoConferencia)}" />
+                                        <f:actionListener binding="#{conferenciaBean.setIdProgramaAux(conferencia.idUsuarioXPrograma.idPrograma.idPrograma)}" />
+                                        <f:setPropertyActionListener target="#{conferenciaBean.conferencia}" value="#{conferencia}"/>
+                                        <f:ajax render=":frmModalEditar"/>
+                                    </h:commandLink>
+                                    &nbsp; 
+                                    <h:commandLink class="glyphicon glyphicon-file" title="#{msgs.conferenciaArchivos}">
+                                        <f:setPropertyActionListener target="#{documentoBean.conferencia}" value="#{conferencia}"/>
+                                        <f:actionListener binding="#{documentoBean.obtenerTodos()}" />
+                                        <f:ajax render=":frmModalArchivos"/>
+                                        <f:ajax onevent="mostrarModalSubirArchivo"/>
+                                    </h:commandLink>
+                                    &nbsp; 
+                                    <h:commandLink class ="glyphicon glyphicon-link " title="#{msgs.indexEnlace}" onclick="$('#modalEnlace').modal('show');">
+                                        <f:setPropertyActionListener target="#{plantillaCorreoBean.conferencia}" value="#{conferencia}"/>
+                                        <f:ajax render=":frmEnlace"/>                                        
+                                    </h:commandLink>
+                                     &nbsp;
+                                    <h:commandLink class="glyphicon glyphicon-modal-window" title="#{msgs.conferenciaCorreos}">
+                                        <f:actionListener binding="#{correoBean.limpiar()}" />										
+                                        <f:setPropertyActionListener target="#{conferenciaBean.conferencia}" value="#{conferencia}"/>
+                                        <f:setPropertyActionListener target="#{correoBean.conferencia}" value="#{conferencia}"/>
+                                        <f:setPropertyActionListener target="#{plantillaCorreoBean.conferencia}" value="#{conferencia}"/>
+                                        <f:setPropertyActionListener target="#{plantillaCorreoBean.pantallaOrigen}" value="1"/>
+                                        <f:actionListener binding="#{correoBean.obtenerTodosXConferencia()}" />
+                                        <f:ajax render=":frmListaCorreo"/>
+                                        <f:ajax onevent="mostrarModalDisenarCorreo"/>
+                                    </h:commandLink>
+                                    &nbsp; 
+                                    <h:commandLink class="glyphicon glyphicon-remove" title="#{msgs.usuarioTitleEliminar}" onclick="$('#modalEliminar').modal('show');">
+                                        <f:setPropertyActionListener target="#{conferenciaBean.conferencia}" value="#{conferencia}"/>
+                                        <f:ajax render=":frmModalEliminar"/>
+                                    </h:commandLink>
+
+                                </h:column>
+
+                            </h:dataTable>
+                        </div>
+                        <center>
+                            <div class="paging-container " id="tablePaging">
+                            </div>
+                        </center>  
+                    </h:form>
+
+                </div>
+            </ui:define>
+        </ui:composition>
+
+        <!-- 4. MODAL: FORMULARIO PARA VER/EDITAR/CREAR REGISTROS-->
+        <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <h:form id="frmModalEditar" >
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+
+                        <!-- 4.1 ENCABEZADO DEL MODAL -->
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <h:outputLabel id="txtTitulo" value="#{conferenciaBean.tituloModal}" />
+                            </h4>
+                        </div> <!-- 4.1 FIN: ENCABEZADO DEL MODAL -->
+
+                        <!-- 4.2 CAMPOS DEL MODAL -->
+                        <div class="modal-body">
+                            <br/>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Id: </label>
+                                    <h:inputText id="txtId" class="form-control" p:placeholder="Id" value="#{conferenciaBean.conferencia.idConferencia}" readonly="true"/>
+                                    <br/>									
+                                </div>
+                                <div class="col-sm-9">
+                                    <label>#{msgs.usuarioHeaderNombre}: </label>
+                                    <h:inputText immediate="true" required="true" label=" " id="txtNombre" class="form-control" p:placeholder="#{msgs.usuarioHeaderNombre}" value="#{conferenciaBean.conferencia.nombre}">
+                                        <f:validateRequired/>
+                                        <f:validateLength minimum="5" maximum="100"/>
+                                        <f:ajax   event="blur" render="txtNombreVal"/>
+                                    </h:inputText>
+                                    <small class="text-muted red-color-text"> <h:message id="txtNombreVal" for="txtNombre"/> </small>
+                                    <br/>
+                                </div>
+                            </div>
+                            <div class="row">	
+                                <div class="col-sm-6">
+                                    <label>#{msgs.indexHeaderPrograma}: </label>
+                                    <h:selectOneMenu class="form-control" id="cbPrograma" value="#{conferenciaBean.idProgramaAux}">
+                                        <f:selectItems value="#{conferenciaBean.getListaProgramasxUsuario(sesionUBean.usuario.idUsuario)}" var="programa" itemValue="#{programa.idPrograma.intValue()}" itemLabel="#{programa.nombre}"/>
+                                        <f:ajax   event="blur"/>
+                                    </h:selectOneMenu>	
+                                    <br/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">								
+                                    <label>#{msgs.etiquetaHeader2}: </label>  
+                                    <h:inputTextarea immediate="true" required="true" label=" " id="txtDescripcion" class="form-control" p:placeholder="#{msgs.etiquetaHeader2}" rows="3" value="#{conferenciaBean.conferencia.descripcion}">
+                                        <f:validateRequired/>
+                                        <f:validateLength minimum="1" maximum="500"/>
+                                        <f:ajax   event="blur" render="txtDescripcionVal"/>
+                                    </h:inputTextarea>
+                                    <small class="text-muted red-color-text"> <h:message id="txtDescripcionVal" for="txtDescripcion"/> </small>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label>#{msgs.conferenciaTipo}: </label>  
+                                    <h:panelGrid columns="2">
+                                        <h:selectOneRadio class="table" id="chkTipo"  value="#{conferenciaBean.conferencia.tipoConferencia}">
+                                            <f:selectItem itemValue="true" itemLabel=" Privada"/>
+                                            <f:selectItem  itemValue="false" itemLabel=" Pública" />
+                                            <f:ajax   event="blur"/>
+                                        </h:selectOneRadio>
+                                    </h:panelGrid>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>#{msgs.conferenciaGrabacion}: </label>  
+                                    <h:panelGrid columns="2">
+                                        <h:outputLabel/>
+                                        <h:selectBooleanCheckbox id="chkGrabacion" value="#{conferenciaBean.conferencia.grabacion}" disabled="#{conferenciaBean.conferencia.idEstadoConferencia.idEstadoConferencia>1 and !conferenciaBean.nuevo}">
+                                            <f:ajax   event="blur"/>
+                                        </h:selectBooleanCheckbox>
+                                    </h:panelGrid>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">							
+                                    <label>#{msgs.indexPonentes}: &nbsp;</label><a href="" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="#{msgs.conferenciaTooltipSpeaker}"></a> 
+                                    <h:inputTextarea id="txtPonentes" class="form-control" p:placeholder="#{msgs.conferenciaPlaceHold}" rows="3" value="#{conferenciaBean.conferencia.ponentes}">
+                                        <f:ajax   event="blur"/>
+                                    </h:inputTextarea>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-sm-12">														
+                                    <label>#{msgs.indexModeradores}: &nbsp;</label><a href="" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="#{msgs.conferenciaTooltipModerator}"></a>  
+                                    <h:inputTextarea id="txtModeradores" class="form-control" p:placeholder="#{msgs.conferenciaPlaceHold}" rows="3" value="#{conferenciaBean.conferencia.moderadores}">
+                                        <f:ajax   event="blur"/>
+                                    </h:inputTextarea>
+                                </div>
+                            </div>
+                            <br/>
+                            <h:panelGrid>
+                                <h:outputLabel id="lblEstDur" value="#{msgs.conferenciaEstablecerDura}:" />
+                                <h:selectBooleanCheckbox id="chbEstDur" value="#{conferenciaBean.establecerDuracion}" disabled="#{conferenciaBean.conferencia.idEstadoConferencia.idEstadoConferencia>1 and !conferenciaBean.nuevo}">
+                                    <f:ajax   event="click" render="@form" />
+                                </h:selectBooleanCheckbox>
+                            </h:panelGrid>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h:inputText label=" " id="txtDuracion" rendered="#{conferenciaBean.establecerDuracion}" class="form-control" p:placeholder="#{msgs.conferenciaDuraMin}" value="#{conferenciaBean.conferencia.duracion}" disabled="#{conferenciaBean.conferencia.idEstadoConferencia.idEstadoConferencia>1 and !conferenciaBean.nuevo}">
+                                        <f:validator validatorId="duracionValidator"/>
+                                        <f:ajax   event="blur" render="txtDuracionVal"/>
+                                    </h:inputText>
+                                </div>
+                            </div>
+                            <small class="text-muted red-color-text"> <h:message id="txtDuracionVal" for="txtDuracion"/></small>
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>#{msgs.conferenciaFechaPonencia}: </label>  
+                                    <h:inputText immediate="true" required="true" label=" " id="txtFchPonencia" class="form-control" p:placeholder="#{msgs.conferenciaFormato}: dd/MM/yyyy" value="#{conferenciaBean.fecha}">
+                                        <f:validateRequired />
+                                        <f:validator validatorId="fechaValidator"/>
+                                        <f:ajax   event="blur" render="txtFchPonenciaVal"/>
+                                    </h:inputText>
+                                    <small class="text-muted red-color-text"> <h:message id="txtFchPonenciaVal" for="txtFchPonencia"/> </small>
+                                    <br/>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <label>#{msgs.conferenciaHoraPonencia}: </label>  
+                                    <h:inputText id="txtHrPonencia" class="form-control" p:placeholder="#{msgs.conferenciaFormato}: HH:MM am/pm" value="#{conferenciaBean.conferencia.horaPonencia}">
+                                        <f:validator validatorId="horaValidator"/>
+                                        <f:ajax   event="blur" render="txtHrPonenciaVal"/>
+                                    </h:inputText>
+                                    <small class="text-muted red-color-text"> <h:message id="txtHrPonenciaVal" for="txtHrPonencia"/> </small>
+                                    <br/>
+                                </div>
+                                <div class="col-sm-6">	
+                                    <label>#{msgs.conferenciaPuntoIni}: </label>  
+                                    <h:inputText id="txtPtoInicio" class="form-control" p:placeholder="#{msgs.conferenciaPuntoIniSe}" value="#{conferenciaBean.conferencia.puntoInicio}" disabled="#{conferenciaBean.conferencia.idEstadoConferencia.idEstadoConferencia!=4}">
+                                        <f:validator validatorId="puntoInicioValidator"/>
+                                        <f:ajax   event="blur" render="txtPtoInicioVal"/>
+                                    </h:inputText>
+                                    <small class="text-muted red-color-text"> <h:message id="txtPtoInicioVal" for="txtPtoInicio"/> </small>
+                                    <br/>									
+                                </div>
+                            </div>
+                        </div> <!-- 4.2 FIN: CAMPOS DEL MODAL -->
+
+                        <!-- 4.3 BOTONES DEL MODAL -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
+                            <h:commandLink id="btnGuardar" class="btn btn-primary" value="#{msgs.btnGuardar}" onclick="$('#modalEditar').modal('hide');">
+                                <f:actionListener binding="#{conferenciaBean.guardar()}" />
+                                <f:actionListener binding="#{conferenciaBean.obtenerTodos()}" />
+                                <f:ajax render=":frmPrincipal :frmMensajeGlobal" onevent="#{('function(data) { loadInsert(data,'.concat(conferenciaBean.lista.size())).concat(') }')}"/>
+                            </h:commandLink>
+                        </div> <!-- 4.3 FIN: BOTONES DEL MODAL -->
+
+                    </div>
+                </div>
+            </h:form>									
+        </div> <!-- 4. CIERRE DEL MODAL DE EDITAR-->
+
+
+        <!-- 5. MODAL: FORMULARIO PARA ELIMINAR REGISTROS-->
+        <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <h:form id="frmModalEliminar">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+
+                        <!-- 5.1 ENCABEZADO DEL MODAL -->
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <h:outputLabel id="txtTitulo" value="#{msgs.conferenciaEliminar}" />
+                            </h4>
+                        </div> <!-- 5.1 FIN: ENCABEZADO DEL MODAL -->
+
+                        <!-- 5.2 MENSAJE DEL MODAL -->
+                        <div id="ContFormEliminar" class="modal-body">
+                            #{msgs.eliminarRegistro}
+                        </div> <!-- 5.2 FIN: MENSAJE DEL MODAL -->
+
+                        <!-- 5.3 BOTONES DEL MODAL -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
+                            <h:commandLink id="btnEliminar" class="btn btn-danger" value="Eliminar" onclick="$('#modalEliminar').modal('hide');">
+                                <f:actionListener binding="#{conferenciaBean.eliminar()}" />
+                                <f:ajax render=":frmPrincipal :frmMensajeGlobal" onevent="#{('function(data) { loadDelete(data,'.concat(conferenciaBean.lista.size())).concat(') }')}"/>
+
+                            </h:commandLink>	
+                        </div> <!-- 5.3 FIN: BOTONES DEL MODAL -->
+
+                    </div>
+                </div>
+            </h:form>											
+        </div> <!-- 5. CIERRE DEL MODAL DE ELIMINAR-->
+        <!-- modal enlaces-->
+        <div class ="modal fade" id ="modalEnlace" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h:form id="frmEnlace">
+                                <h:commandLink value="#{plantillaCorreoBean.conferencia.attendeeurl}" id="enlace"/>       
+                            </h:form>
+                        </div>
+                    </div>    
+            </div>           
+        </div>
+        <!-- 6. MODAL: FORMULARIO PARA SUBIR DOCUMENTOS-->
+        <div class="modal fade" id="modalArchivos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <h:form id="frmTituloModalArchivos">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <h:outputLabel id="txtTituloFiles" value="#{ msgs.conferenciaArchivos.concat(' - '.concat(documentoBean.conferencia.nombre))}" />
+                            </h4>
+                        </div> <!-- 5.1 FIN: ENCABEZADO DEL MODAL -->
+                    </h:form>
+
+                    <div class="modal-body">
+
+                        <h:form id="frmModalArchivos">
+
+
+
+
+
+
+
+
+
+                            <div class="table-responsive centered-heading">
+                                <h:dataTable id="dtPrincipal" styleClass="table table-hover table-striped table-condensed" columnClasses="td-left, td-btn" value="#{documentoBean.lista}" var="documento">
+                                    <h:column>
+                                        <f:facet name="header">Nombre</f:facet>
+                                        <h:outputLabel class="celda puntos-suspensivos" value="#{documento.nombre}" title="#{documento.nombre}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">-</f:facet>
+                                        <h:commandLink class="glyphicon glyphicon-download" title="Descargar">
+                                            <f:setPropertyActionListener target="#{documentoBean.documento}" value="#{documento}"/>
+                                            <f:actionListener binding="#{documentoBean.download()}"/>
+                                        </h:commandLink>
+                                        &nbsp;&nbsp;
+                                        <h:commandLink class="glyphicon glyphicon-remove" title="Eliminar" onclick="$('#modalEliminarArchivo').modal('show');">
+                                            <f:setPropertyActionListener target="#{documentoBean.documento}" value="#{documento}"/>
+
+                                            <f:ajax render=":frmModalEliminarArchivo"/>
+                                        </h:commandLink>
+
+
+
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+
+
+                            <label>#{msgs.conferenciaArcAutores}: </label>  
+                            <h:inputTextarea id="txtAutoresDoc" class="form-control" p:placeholder="#{msgs.conferenciaArcAutores}" rows="3" value="#{documentoBean.documento.autores}">
+                                <f:ajax   event="blur"/>
+                            </h:inputTextarea>
+                            <br/>
+
+
+                        </h:form>
+                        <h:form id="form" enctype="multipart/form-data">
+                            <label>#{msgs.conferenciaArcDocumento} (PDF): </label>  
+                            <br/>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <h:inputFile title="#{documentoBean.uploadedFile}" class="btn btn-default" style=" background:#EFEFEF; margin: 0px; color: #444444;" id="file" value="#{documentoBean.uploadedFile}" validator="#{documentoBean.validateFile}" />
+                                </div>
+                                <div class="col-sm-12 hidden">
+                                    <h:commandButton class="btn btn-sm btn-primary btnSubirArchivo" action="#{documentoBean.upload()}" value="#{msgs.btnGuardar}" />
+                                </div>
+                            </div>
+
+                        </h:form>	
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <h:form id="frmGuardarArchivo">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCerrar}</button>
+                            <h:commandButton class="btn btn-primary btnSubirArchivoTemp" value="#{msgs.SubirArchivo}" >
+                                <f:ajax render=":frmGuardarArchivo" />
+                            </h:commandButton>
+                        </h:form>
+                    </div> <!-- 6.3 FIN: BOTONES DEL MODAL -->
+
+                </div>
+            </div>
+
+        </div> <!-- 6. CIERRE DEL MODAL CONFERENCIAS-->
+        <!-- 7. MODAL: FORMULARIO PARA DISEÑAR/CREAR CORREOS-->
+        <div id="modalDisenarCorreo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+
+                    <!-- 7.1 ENCABEZADO DEL MODAL -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">
+                            <h:outputLabel id="txtTitulo" value="#{msgs.conferenciaCorreos}" />
+                        </h4>
+                    </div> <!-- 7.1 FIN: ENCABEZADO DEL MODAL -->
+
+                    <!-- 7.2 CAMPOS DEL MODAL -->
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-sm-4">
+                                <br/>
+                                <h:form id="frmListaCorreo">
+                                    <div class="table-responsive">
+                                        <div class="panel-group" id="divAcordeon">
+
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading panel-title" style="cursor: pointer" data-parent="#divAcordeon" data-toggle="collapse" data-target="#seccion1">
+                                                    #{msgs.conferenciaCorreosEx}
+                                                </div>
+                                                <div id="seccion1" class="panel-collapse collapse in">
+
+                                                    <h:dataTable id="dtPrincipal" styleClass="table table-hover table-bordered" columnClasses="td-left" value="#{correoBean.getLista()}" var="correo">
+                                                        <h:column>
+                                                            <h:commandLink class="celda sin-subrayado puntos-suspensivos" value="#{correo.idCorreo} #{correo.idPlantillaCorreo.nombre}" title="#{correo.idPlantillaCorreo.nombre}">
+                                                                <f:setPropertyActionListener target="#{correoBean.correo}" value="#{correo}"/>
+                                                                <f:actionListener binding="#{correoBean.setNuevo(false)}"/>
+                                                                <f:ajax render=":frmModalCrearCorreo"/>
+                                                                <f:ajax onevent="cargarCorreoEnTrumbowyg"/>
+                                                            </h:commandLink>
+                                                            <br/>
+                                                        </h:column>
+                                                    </h:dataTable>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading panel-title" style="cursor: pointer" data-parent="#divAcordeon" data-toggle="collapse" data-target="#seccion2">
+                                                    #{msgs.plantillaNombre}
+                                                </div>
+                                                <div id="seccion2" class="panel-collapse collapse">
+
+                                                    <h:dataTable id="dtPrincipal2" styleClass="table table-hover table-bordered" columnClasses="td-left" value="#{plantillaCorreoBean.getLista()}" var="plantillaCorreo">
+                                                        <h:column>
+                                                            <h:commandLink class="celda sin-subrayado puntos-suspensivos" value="#{plantillaCorreo.nombre}" title="#{plantillaCorreo.nombre}">
+                                                                <f:setPropertyActionListener target="#{plantillaCorreoBean.plantillaCorreo}" value="#{plantillaCorreo}"/>
+                                                                <f:actionListener binding="#{correoBean.setNuevo(true)}"/>
+                                                                <f:setPropertyActionListener target="#{correoBean.idPlantillaCorreo}" value="#{plantillaCorreo.idPlantillaCorreo}"/>
+                                                                <f:ajax render=":frmModalCrearCorreo"/>
+                                                                <f:ajax onevent="cargarPlantillaEnTrumbowyg"/>
+                                                            </h:commandLink>
+                                                            <br/>
+                                                        </h:column>
+                                                    </h:dataTable>
+
+                                                </div>
+                                            </div>				
+                                        </div> 	
+                                    </div>
+                                </h:form>
+                                <h:form id="frmModalCrearCorreo">
+                                    <!-- PARA GUARDAR TEMPORALMENTE EL MENSAJE DESDE CORREO -->
+                                    <label class="hidden">#{msgs.plantillaNombre}: </label>										
+                                    <h:inputTextarea id="txtContenido" class="txtContenidoOculto form-control hidden" p:placeholder="#{msgs.plantillaNombre}" value="#{correoBean.correo.contenido}">
+                                        <f:ajax event="click" />
+                                    </h:inputTextarea>
+
+                                    <!-- PARA GUARDAR TEMPORALMENTE EL MENSAJE DESDE PLANTILLA DE CORREO -->
+                                    <label class="hidden">#{msgs.plantillaNombre}: </label>
+                                    <h:inputTextarea id="txtContenido2" class="txtContenidoOculto2 form-control hidden" p:placeholder="#{msgs.plantillaNombre}" value="#{plantillaCorreoBean.plantillaCorreo.contenido}">
+                                        <f:ajax event="click" />
+                                    </h:inputTextarea>
+
+                                    <!-- PARA GUARDAR EL CORREO EN LA BDD (SOLO GUARDAR) -->									
+                                    <label class="hidden">Botón de Guardar: </label>
+                                    <h:commandLink id="idBtnGuardarCorreo" class="btnGuardarCorreo btn btn-primary hidden" value="#{msgs.btnGuardar}">
+                                        <f:actionListener binding="#{correoBean.guardar()}" />
+                                        <f:actionListener binding="#{correoBean.obtenerTodosXConferencia()}" />
+                                        <f:ajax render=":frmListaCorreo" />
+                                    </h:commandLink>
+
+                                    <!-- PARA GUARDAR EL CORREO EN LA BDD Y LUEGO REENVIAR-->									
+                                    <label class="hidden">Botón de Guardar: </label>
+                                    <h:commandLink id="idBtnGuardarCorreo2" class="btnGuardarCorreo2 btn btn-primary hidden" value="Guardar Parte 1">
+                                        <f:actionListener binding="#{correoBean.guardar()}" />
+                                        <f:actionListener binding="#{correoBean.obtenerTodosXConferencia()}" />
+                                        <f:ajax render=":frmListaCorreo" />
+                                        <f:ajax onevent="redireccionarEnviarCorreo" />
+                                    </h:commandLink>
+
+                                    <label class="hidden">Botón de abrir ventana extra para enviar correo: </label>
+                                    <h:commandLink id="idBtnEnviarCorreo" class="btnEnviarCorreo btn btn-primary hidden" value="#{msgs.correoEnviar}" action="enviarCorreo">
+                                    </h:commandLink>
+
+                                </h:form>
+                            </div>
+
+                            <div class="col-sm-8">
+                                <div id="rtfContenido">
+                                    <h2>#{msgs.plantillaMsjIngresar}</h2>
+                                </div>
+                            </div>								
+                        </div>
+                    </div> <!-- 7.2 FIN: CAMPOS DEL MODAL -->
+
+
+                    <!-- 7.3 BOTONES DEL MODAL -->
+                    <div class="modal-footer">
+                        <h:form id="frmEnviarCorreo" target="_blank" >
+                            <button id="btnCancelar" type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCerrar}</button>							
+                            <h:commandButton id="idBtnGuardarYEnviarCorreoTemp" type="button" class="btnGuardarYEnviarCorreoTemp btn btn-primary" value="#{msgs.conferenciaGuarEnv}">
+                            </h:commandButton>
+                            <h:commandButton id="idBtnGuardarCorreoTemp" type="button" class="btnGuardarCorreoTemp btn btn-primary" value="#{msgs.btnGuardar}">
+                            </h:commandButton>
+                        </h:form>						
+                    </div> <!-- 7.3 FIN: BOTONES DEL MODAL -->
+
+                </div>
+            </div>
+        </div> <!-- 7. CIERRE DEL MODAL DE EDITAR-->
+
+        <div class="modal fade" id="modalEliminarArchivo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <h:form id="frmModalEliminarArchivo">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+
+                        <!-- 5.1 ENCABEZADO DEL MODAL -->
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <h:outputLabel id="txtTitulo" value="#{msgs.conferenciaArcEli}" />
+                            </h4>
+                        </div> <!-- 5.1 FIN: ENCABEZADO DEL MODAL -->
+
+                        <!-- 5.2 MENSAJE DEL MODAL -->
+                        <div id="ContFormEliminar" class="modal-body">
+                            #{msgs.eliminarRegistro}
+                        </div> <!-- 5.2 FIN: MENSAJE DEL MODAL -->
+
+                        <!-- 5.3 BOTONES DEL MODAL -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
+                            <h:commandLink id="btnEliminar" class="btn btn-danger" value="#{msgs.btnEliminar}" onclick="$('#modalEliminarArchivo').modal('hide');">
+                                <f:actionListener binding="#{documentoBean.eliminar()}" />
+                                <f:ajax render=":frmModalArchivos" />
+                            </h:commandLink>	
+                        </div> <!-- 8.3 FIN: BOTONES DEL MODAL -->
+
+                    </div>
+                </div>
+            </h:form>											
+        </div> <!-- 8. CIERRE DEL MODAL DE ELIMINAR Archivos-->
+
+
+    </h:body>
+
+    <h:outputScript>
+        var rutaIconos="#{resource['ui/icons.svg']}";
+    </h:outputScript>
+
+</html>

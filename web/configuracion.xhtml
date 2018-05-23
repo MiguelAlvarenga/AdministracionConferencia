@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XTHML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+
+<html lang="es" xml:lang="es" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <link rel="icon" type="image/png" href="#{resource['img/logo_bbb.png']}" />		
+        <title>Administrador de Conferencias</title>
+
+        <h:outputScript library="js" name="jquery-2.2.3.js" />
+        <h:outputScript library="js" name="bootstrap.js" />
+        <h:outputScript library="js" name="configuracion.js" />
+
+        <h:outputStylesheet library="css" name="bootstrap.css" />
+        <h:outputStylesheet library="css" name="plantilla_maestra.css" />
+        <h:outputStylesheet library="css" name="general.css" />
+        <h:outputStylesheet library="css" name="table.css" />
+        <h:outputStylesheet library="css" name="pagination.css" />
+    </h:head>
+
+    <h:body>
+        <ui:composition template="template/plantillaPrincipal.xhtml">
+            <ui:define name="content">
+
+                <div class="bg-lr-padding">
+
+                    <div id="contenedorMensajes">
+                        <h:outputScript library="js" name="mensajesError.js" />
+                        <h:form id="frmMensajeGlobal">
+                            <h:messages/>
+                        </h:form>
+                    </div>
+
+                    <ul class="nav nav-tabs">
+                        <li id="liConfPlantilla" class="active"><a>#{msgs.ConfigAjustes}</a></li>
+                        <li id="liConfPDF"><a>#{msgs.ConfigPresenDefault}</a></li>	
+                        <li id="liConfTipoPlantilla"><a>#{msgs.ConfigCorreo}</a></li>
+                    </ul>
+
+
+                    <div id="idConfBBB">
+
+                        <br />
+                        <strong>#{msgs.ConfigAjusTitulo}</strong>
+                        <br/>
+                        #{msgs.ConfigAjusParrafo}
+                        <br/>
+
+                        <h:form id="frmModalEditar" >
+                            <!-- 4.2 CAMPOS DEL MODAL -->
+                            <div class="modal-body">
+                                <br/>
+                                <label>#{msgs.ConfigAjusIP}: </label>
+                                <h:inputText id="txtIp" class="form-control" p:placeholder="#{msgs.ConfigAjusIP}" value="#{configuracionRedBean.configuracion.ipBbb}">
+                                    <f:ajax   event="blur"/>
+                                </h:inputText>
+
+                                <br/>
+                                <label>#{msgs.ConfigAjusSalt}: </label>
+                                <h:inputText id="txtSalt" class="form-control" p:placeholder="#{msgs.ConfigAjusSalt}" value="#{configuracionRedBean.configuracion.salt}">
+                                    <f:ajax   event="blur"/>
+                                </h:inputText>
+
+                                <br/>
+                                <label>#{msgs.ConfigAjusLogOut}: </label>
+                                <h:inputText id="txtlogoutURL" class="form-control" p:placeholder="#{msgs.ConfigAjusLogOut}" value="#{configuracionRedBean.configuracion.logouturl}">
+                                    <f:ajax   event="blur"/>
+                                </h:inputText>
+
+
+
+
+                            </div> <!-- 4.2 FIN: CAMPOS DEL MODAL -->
+
+                            <!-- 4.3 BOTONES DEL MODAL -->
+                            <div class="modal-footer">
+                                <h:commandLink id="btnCancelar" class="btn btn-default" value="#{msgs.btnCancelar}">
+                                    <f:actionListener binding="#{configuracionRedBean.obtener()}" />
+                                    <f:ajax render=":frmModalEditar" />
+                                </h:commandLink>
+                                <h:commandLink id="btnGuardar" class="btn btn-primary" value="#{msgs.btnGuardar}">
+                                    <f:actionListener binding="#{configuracionRedBean.guardar()}" />
+                                    <f:actionListener binding="#{configuracionRedBean.obtener()}" />
+                                    <f:ajax render=":frmMensajeGlobal"/>
+                                </h:commandLink>
+                            </div> <!-- 4.3 FIN: BOTONES DEL MODAL -->
+
+
+                        </h:form>                        
+                    </div>
+
+
+
+                    <div id="divConfCorreo" class="hidden">
+
+                        <br />
+                        <strong>#{msgs.ConfigCorreoTitulo}</strong>
+                        <br/>
+                        #{msgs.ConfigCorreoParrafo}
+                        <br/>
+
+                        <h:form id="formConfCorreo">
+
+                            <div class="modal-body">
+
+                                <br/>
+                                <label>#{msgs.ConfigCorreoDominio}: </label>
+                                <h:inputText id="nomDominio" class="form-control" p:placeholder="#{msgs.ConfigCorreoDominio}" value="#{configuracionRedBean.configuracion.nombreDominio}">
+                                    <f:ajax   event="blur"/>
+                                </h:inputText>
+
+                                <br/>
+                                <label>#{msgs.ConfigCorreoDirec}: </label>
+                                <h:inputText id="correoConf" class="form-control" p:placeholder="#{msgs.ConfigCorreoDirec}" value="#{configuracionRedBean.configuracion.correo}">
+                                    <f:ajax   event="blur"/>
+                                </h:inputText>        
+
+                                <br/>
+                                <label>#{msgs.usuarioHeaderContra}: </label>
+                                <h:inputText id="passwordConf" class="form-control" p:placeholder="#{msgs.usuarioHeaderContra}" value="#{configuracionRedBean.configuracion.contrasena}">
+                                    <f:ajax   event="blur"/>
+                                </h:inputText>        
+
+                                <br/>
+                                <label>#{msgs.ConfigCorreoPuerto}: </label>
+                                <h:inputText id="puertoConf" class="form-control" p:placeholder="#{msgs.ConfigCorreoPuerto}" value="#{configuracionRedBean.configuracion.puerto}">
+                                    <f:ajax   event="blur"/>
+                                </h:inputText>         
+
+                                <br/>
+
+                                <label>#{msgs.ConfigCorreoTransport}: </label>
+                                <h:inputText id="txtTransporteConf" class="form-control" p:placeholder="#{msgs.ConfigCorreoTransport}" value="#{configuracionRedBean.configuracion.transporte}">
+                                    <f:ajax   event="blur" />
+                                </h:inputText> 
+
+                                <br/>
+
+                                <label>#{msgs.ConfigCorreoEncript}: </label>
+                                <h:inputText id="txtEncriptacionConf" class="form-control" p:placeholder="#{msgs.ConfigCorreoEncript}" value="#{configuracionRedBean.configuracion.encriptacion}">
+                                    <f:ajax   event="blur"/>
+                                </h:inputText>        
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <h:commandLink id="btnCancelarCorreo" class="btn btn-default" value="#{msgs.btnCancelar}">
+                                    <f:actionListener binding="#{configuracionRedBean.obtener()}" />
+                                    <f:ajax render=":formConfCorreo" />
+                                </h:commandLink>
+                                <h:commandLink id="btnGuardarCorreo" class="btn btn-primary" value="#{msgs.btnGuardar}">
+                                    <f:actionListener binding="#{configuracionRedBean.guardar()}" />
+                                    <f:actionListener binding="#{configuracionRedBean.obtener()}" />
+                                    <f:ajax render=":frmMensajeGlobal"/>
+                                </h:commandLink>
+                            </div>
+
+                        </h:form>
+
+
+                    </div>
+
+                    <div id="idConfPDFBBB" class="hidden">
+                        <br />
+                        <strong>#{msgs.ConfigPDFTitulo}</strong>
+                        <br/>
+                        #{msgs.ConfigPDFParrafo}
+                        <br/>
+
+
+                        <h:form id="form" enctype="multipart/form-data">
+                            <div class="modal-body">
+
+                                <br/>            
+                                <label>#{msgs.ConfigPDFDefault}: </label>
+                                <h:outputLabel id="olDefaultPDF" class="form-control" value="#{configuracionRedBean.configuracion.nombre}"/>
+                                <h:inputFile id="file" value="#{configuracionRedBean.uploadedFile}" validator="#{configuracionRedBean.validateFile}" >
+                                </h:inputFile> 
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <h:commandLink id="btnCancelarCorreo" class="btn btn-default" value="#{msgs.btnCancelar}" action="#{configuracionRedBean.obtener()}"/>
+                                <h:commandButton class="btn btn-primary" value="#{msgs.ConfigPDFSubir}">
+                                    <f:actionListener binding="#{configuracionRedBean.upload()}"/>
+                                </h:commandButton>
+                            </div>
+                        </h:form>
+
+                    </div>
+
+
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+
+</html>
