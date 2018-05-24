@@ -51,10 +51,13 @@
                     </h:form>
 
                     <br/> 
-                    <h:form onkeypress="return event.keyCode !== 13;">                      
+                    <!--Filtro de busqueda-->
+                    <h:form onkeypress="return event.keyCode !== 13;">
+                        <h4>Filtro:</h4>
                         <input id="filter" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrar('.concat(usuarioBean.lista.size())).concat(')')}"></input>
                     </h:form>
-
+                    <br/>
+                    
                     <h:form id="frmPrincipal">
                         <div class="table-responsive centered-heading">
                             <h:dataTable id="dtPrincipal" styleClass="paginacion table table-hover table-striped table-bordered" columnClasses="td-id, td-center, td-center, td-center, td-left, td-left, td-center, td-btn2" value="#{usuarioBean.getLista()}" var="usuario">
@@ -265,7 +268,8 @@
                                 <div class="bg-lr-padding">	
 
 
-                                    <h:form onkeypress="return event.keyCode !== 13;">                      
+                                    <h:form onkeypress="return event.keyCode !== 13;">
+                                        <h4>Filtro:</h4>
                                         <input id="filterP" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrarP('.concat(usuarioBean.listaProgramas.size())).concat(')')}"></input>
                                     </h:form>
                                     <h:form id="frmRegistro">

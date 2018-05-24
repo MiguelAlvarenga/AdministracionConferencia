@@ -62,8 +62,10 @@
                             <div id="conferenciasEmision" class="centered-heading">
                                 <h4>
                                     <h:outputLabel id="txtTituloEmi" value="#{msgs.indexHeaderTblConferencias}" />
+                                    <!--Filtro de busqueda-->
                                     <h:form onkeypress="return event.keyCode !== 13;">                      
                                         <div class="pull-right">
+                                            <h4>Filtro:</h4>
                                             <input id="filterTPl" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrarTPl('.concat(indexBean.lista.size())).concat(')')}"></input>
                                         </div>
                                     </h:form>
@@ -113,7 +115,9 @@
                                 <h4>
                                     <h:outputLabel id="txtTituloGra" value="#{msgs.indexHeaderTblGrabaciones}" />
                                     <div class="pull-right">
-                                        <h:form onkeypress="return event.keyCode !== 13;">                      
+                                        <!--Filtro de busqueda-->
+                                        <h:form onkeypress="return event.keyCode !== 13;">
+                                            <h4>Filtro:</h4>
                                             <input id="filterPl" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrarPl('.concat(indexBean.listaGrabaciones.size())).concat(')')}"></input>
                                         </h:form>
                                     </div> 

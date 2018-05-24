@@ -56,11 +56,13 @@
                     </h:form>
 
                     <br/>
-
-                    <h:form onkeypress="return event.keyCode !== 13;">                      
+                    <!--Filtro de busqueda-->
+                    <h:form onkeypress="return event.keyCode !== 13;">
+                        <h4>Filtro:</h4>
                         <input id="filter" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrar('.concat(conferenciaBean.lista.size())).concat(')')}"></input>
                     </h:form>
-
+                    <br/>
+                    
                     <h:form id="frmPrincipal">
 
                         <div class="table-responsive centered-heading">
@@ -96,7 +98,7 @@
                                     <f:facet name="header">#{msgs.usuarioHeaderEstado}</f:facet>
                                     <h:outputLabel class="celda" value="#{conferenciaBean.getResource(conferencia.idEstadoConferencia.nombre)}"/> 
                                 </h:column>
-<!-- aqui va el boton para generar el enlace-->
+
                                 <h:column>
                                     <f:facet name="header">-</f:facet>											
                                     <h:commandLink class="glyphicon glyphicon-edit" title="#{msgs.usuarioTitleEditar}" onclick="$('#modalEditar').modal('show');">
@@ -116,6 +118,7 @@
                                         <f:ajax onevent="mostrarModalSubirArchivo"/>
                                     </h:commandLink>
                                     &nbsp; 
+                                    <!-- aqui va el boton para generar el enlace-->
                                     <h:commandLink class ="glyphicon glyphicon-link " title="#{msgs.indexEnlace}" onclick="$('#modalEnlace').modal('show');">
                                         <f:setPropertyActionListener target="#{plantillaCorreoBean.conferencia}" value="#{conferencia}"/>
                                         <f:ajax render=":frmEnlace"/>                                        
@@ -348,18 +351,26 @@
                 </div>
             </h:form>											
         </div> <!-- 5. CIERRE DEL MODAL DE ELIMINAR-->
-        <!-- modal enlaces-->
+        
+        <!-- MODAL DE ENLACE-->
         <div class ="modal fade" id ="modalEnlace" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h:outputLabel id="txtTituloFiles" value="Enlace"/>
+                            </h4>
+                        </div>
+                        <div class="modal-body">
                             <h:form id="frmEnlace">
                                 <h:commandLink value="#{plantillaCorreoBean.conferencia.attendeeurl}" id="enlace"/>       
                             </h:form>
                         </div>
                     </div>    
             </div>           
-        </div>
+        </div><!--CIERRE DE MODAL DE ENLACE-->
+        
         <!-- 6. MODAL: FORMULARIO PARA SUBIR DOCUMENTOS-->
         <div class="modal fade" id="modalArchivos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">

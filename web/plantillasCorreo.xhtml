@@ -58,9 +58,13 @@
                             </h:commandLink>
                         </h:form>
                         <br/>
-                        <h:form onkeypress="return event.keyCode !== 13;">                      
+                        <!--Filtro de busqueda-->
+                        <h:form onkeypress="return event.keyCode !== 13;">
+                            <h4>Filtro:</h4>
                             <input id="filterPl" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrarPl('.concat(plantillaCorreoBean.getLista().size())).concat(')')}"></input>
                         </h:form>
+                        <br/>
+                        
                         <h:form id="frmPrincipal">
                             <div class="table-responsive">
                                 <h:dataTable id="dtPrincipal" styleClass="tablaPl paginacion table table-hover table-striped table-bordered" columnClasses="td-id,td-left, td-left, td-btn2" value="#{plantillaCorreoBean.getLista()}" var="plantillaCorreo">
@@ -125,9 +129,13 @@
                             </h:commandLink>
                         </h:form>
                         <br/>
-                        <h:form onkeypress="return event.keyCode !== 13;">                      
+                        <!--Filtro de busqueda-->
+                        <h:form onkeypress="return event.keyCode !== 13;">
+                            <h4>Filtro:</h4>
                             <input id="filterTPl" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrarTPl('.concat(plantillaCorreoBean.getLista().size())).concat(')')}"></input>
                         </h:form>
+                        <br/>
+                        
                         <h:form id="frmPrincipal2">
                             <div class="table-responsive">
                                 <h:dataTable id="dtPrincipal" styleClass="tablaTPl table table-hover table-striped table-bordered" columnClasses="td-id,td-left, td-btn" value="#{tipoPlantillaBean.getLista()}" var="tipoPlantilla">
