@@ -14,7 +14,7 @@ $(document).ready(function () {
     $("body").on("click", ".btnSubirArchivoTemp", function () {
         $(".btnSubirArchivo").click();
     });
-
+    
 });
 
 function cargarCorreoAGuardar() {
@@ -96,17 +96,3 @@ function mostrarModalSubirArchivo() {
 function redireccionarEnviarCorreo() {
     $(".btnEnviarCorreo").click();
 }
-function  copiaEnlace() {
-  /* Get the text field */
-  var copyText = document.getElementById("enlace");
-  temp
-  /* Select the text field */
-  copyText.select();
-
-  /* Copy the text inside the text field */
-  document.execCommand("copy");
-
-  /* Alert the copied text */
-  alert("Enlace guardado en portapapeles");
-}
-

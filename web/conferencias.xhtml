@@ -4,13 +4,17 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      >
 
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 
-        <link rel="icon" type="image/png" href="#{resource['img/logo_bbb.png']}" />		
+        <link rel="icon" type="image/png" href="#{resource['img/logo_bbb.png']}" />
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+        
         <title>Administrador de Conferencias</title>
 
         <h:outputScript library="js" name="jquery-2.2.3.js" />
@@ -20,7 +24,9 @@
         <h:outputScript library="js" name="conferencia.js" />
         <h:outputScript library="js" name="pagination.js" />
         <h:outputScript library="js" name="paginationW.js" />
-
+        <h:outputScript library="js" name="jquery-ui.js"/>
+        <h:outputScript library="js" name="datePicker.js"/>
+        
         <h:outputStylesheet library="css" name="bootstrap.css" />
         <h:outputStylesheet library="css" name="plantilla_maestra.css" />
         <h:outputStylesheet library="css" name="main.css" />
@@ -28,6 +34,8 @@
         <h:outputStylesheet library="css" name="general.css" />
         <h:outputStylesheet library="css" name="table.css" />
         <h:outputStylesheet library="css" name="pagination.css" />
+        <h:outputStylesheet library="css" name="jquery-ui.css"/>
+        
     </h:head>
 
     <h:body onload="load(#{conferenciaBean.lista.size()})">
@@ -271,7 +279,9 @@
 
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <label>#{msgs.conferenciaFechaPonencia}: </label>  
+                                    <!--FECHA DEL FORMULARIO-->
+                                    <label>#{msgs.conferenciaFechaPonencia}: </label> 
+                                    
                                     <h:inputText immediate="true" required="true" label=" " id="txtFchPonencia" class="form-control" p:placeholder="#{msgs.conferenciaFormato}: dd/MM/yyyy" value="#{conferenciaBean.fecha}">
                                         <f:validateRequired />
                                         <f:validator validatorId="fechaValidator"/>
@@ -623,9 +633,11 @@
 
 
     </h:body>
-
     <h:outputScript>
         var rutaIconos="#{resource['ui/icons.svg']}";
+    </h:outputScript>
+    <h:outputScript>
+        
     </h:outputScript>
 
 </html>
