@@ -3,6 +3,7 @@ package bean;
 import dao.ConferenciaDao;
 import dao.EstadoConferenciaDao;
 import dao.UsuarioXProgramaDao;
+import dao.UsuarioDao;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,6 +18,7 @@ import javax.faces.context.FacesContext;
 import model.Conferencia;
 import model.EstadoConferencia;
 import model.Programa;
+import model.Usuario;
 
 @ViewScoped
 @ManagedBean
@@ -26,8 +28,10 @@ public class ConferenciaBean implements Serializable {
     private Conferencia conferencia = new Conferencia();
     private List<Conferencia> lista = new ArrayList<>();
     private List<Programa> listaProgramasxUsuario = new ArrayList<>();
+    private List<Usuario> ListaUsuariosAsociados = new ArrayList();
     private List<EstadoConferencia> listaEstadosConf = new ArrayList<>();
     private int idProgramaAux;
+    private int idProgramaAux2;
     private int idEstadoAux;
     private int idUsuarioAux;
 
@@ -135,6 +139,16 @@ public class ConferenciaBean implements Serializable {
 
     public void setListaProgramasxUsuario(List<Programa> listaProgramasxUsuario) {
         this.listaProgramasxUsuario = listaProgramasxUsuario;
+    }
+
+    public List<Usuario> getListaUsuariosAsociados(int IdProgramaAux2) {
+        UsuarioXProgramaDao daoUsuarioXPrograma = new UsuarioXProgramaDao();
+        ListaUsuariosAsociados = daoUsuarioXPrograma.obtenerTodosUsuariosHabilitados(IdProgramaAux2);
+        return ListaUsuariosAsociados;
+    }
+
+    public void setListaUsuariosAsociados(List<Usuario> ListaUsuariosAsociados) {
+        this.ListaUsuariosAsociados = ListaUsuariosAsociados;
     }
 
     public String getTituloModal() {
