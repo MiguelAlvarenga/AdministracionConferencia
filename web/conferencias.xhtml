@@ -132,6 +132,15 @@
                                         <f:ajax render=":frmEnlace"/>                                        
                                     </h:commandLink>
                                      &nbsp;
+                                     <!-- Programas asociados -->
+                                     <h:commandLink class="glyphicon glyphicon-user" title="#{msgs.programaAsociar}" >
+					<f:setPropertyActionListener target="#{programaBean.programa}" value="#{programa}"/>
+					<f:setPropertyActionListener target="#{programaAuxBean.programa}" value="#{programa}"/>
+					<f:actionListener binding="#{programaBean.obtenerUsuariosHab()}" />					
+					<f:ajax render=":frmModalRegistro" />
+					<f:ajax onevent="mostrarModalAsociarUsuario"/>
+                                    </h:commandLink>
+                                     &nbsp;
                                     <h:commandLink class="glyphicon glyphicon-modal-window" title="#{msgs.conferenciaCorreos}">
                                         <f:actionListener binding="#{correoBean.limpiar()}" />										
                                         <f:setPropertyActionListener target="#{conferenciaBean.conferencia}" value="#{conferencia}"/>
@@ -631,7 +640,126 @@
             </h:form>											
         </div> <!-- 8. CIERRE DEL MODAL DE ELIMINAR Archivos-->
 
+<div class="modal fade" id="modalRegistro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<h:form id="frmModalRegistro">
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
 
+						<!-- 8.1 ENCABEZADO DEL MODAL -->
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="myModalLabel">
+								<h:outputLabel id="txtTitulo" value="#{msgs.programaUsuarios} - #{programaBean.programa.nombre}" class="puntos-suspensivos"/>
+							</h4>
+						</div> <!-- 6.1 FIN: ENCABEZADO DEL MODAL -->
+
+						<!-- 6.2 MENSAJE DEL MODAL -->
+						<div id="ContFormRegistro" class="modal-body">
+
+							<div id="ContenidoPrincipalRegistro">
+								<div class="bg-lr-padding">	
+									<br/>
+									<div class="row">
+										<div class="col-sm-6">
+
+											<label style="text-align:center">#{msgs.programaNoUsuarios}</label>
+
+											<div class="table-responsive centered-heading">
+												<h:form onkeypress="return event.keyCode !== 13;">
+													<input id="filterUsuNo" type="text" class="form-control" placeholder="..." onkeyup="filtrarUsuNo(#{programaBean.listaUsuariosDeshabilitados.size()})"></input>
+												</h:form>
+												<h:dataTable id="dtRegistro2" styleClass="tablaUsuNo table table-hover table-striped table-condensed" columnClasses="td-left,td-left,td-lef, td-btn" value="#{programaBean.listaUsuariosDeshabilitados}" var="listaDes">
+
+													<h:column >
+														<f:facet name="header">#{msgs.usuarioHeaderNombre}</f:facet>
+														<h:outputLabel class="celda" value="#{listaDes.nombre}"/> 
+													</h:column>
+
+													<h:column >
+														<f:facet name="header">#{msgs.usuarioHeaderApellido}</f:facet>
+														<h:outputLabel class="celda" value="#{listaDes.apellido}"/> 
+													</h:column>
+
+													<h:column >
+														<f:facet name="header">#{msgs.usuarioHeaderUsuario}</f:facet>
+														<h:outputLabel class="celda" value="#{listaDes.usuario}"/> 
+													</h:column>
+
+													<h:column>
+														<f:facet name="header">-</f:facet>
+														<h:commandLink class="glyphicon glyphicon-plus" title="#{msgs.programaAgregar}">
+															<f:setPropertyActionListener target="#{programaBean.usuario}" value="#{listaDes}"/>
+															<f:actionListener binding="#{programaBean.asociar()}" />
+															<f:ajax render=":frmModalRegistro" />
+														</h:commandLink>
+													</h:column>
+
+												</h:dataTable>
+											</div>
+										</div>
+
+										<div class="col-sm-6">
+
+											<label style="text-align:center">#{msgs.programaUsuarios}</label>
+
+											<div class="table-responsive centered-heading">
+												<h:form onkeypress="return event.keyCode !== 13;">                      
+													<input id="filterUsuSi" type="text" class="form-control" placeholder="..." onkeyup="filtrarUsuSi(#{programaBean.listaUsuariosHabilitados.size()})" />
+												</h:form>
+												<h:dataTable id="dtRegistro" styleClass="tablaUsuSi table table-hover table-striped table-condensed" columnClasses="td-left,td-left,td-lef, td-btn" value="#{programaBean.listaUsuariosHabilitados}" var="listaHab">
+
+													<h:column >
+														<f:facet name="header">#{msgs.usuarioHeaderNombre} </f:facet>
+														<h:outputLabel class="celda" value="#{listaHab.nombre}"/> 
+													</h:column>
+
+													<h:column >
+														<f:facet name="header">#{msgs.usuarioHeaderApellido} </f:facet>
+														<h:outputLabel class="celda" value="#{listaHab.apellido}"/> 
+													</h:column>
+
+													<h:column >
+														<f:facet name="header">#{msgs.usuarioHeaderUsuario} </f:facet>
+														<h:outputLabel class="celda" value="#{listaHab.usuario}"/> 
+													</h:column>
+
+													<h:column>
+														<f:facet name="header">-</f:facet>
+														<h:commandLink class="glyphicon glyphicon-minus" title="#{msgs.programaRemover}">
+															<f:setPropertyActionListener target="#{programaBean.usuario}" value="#{listaHab}"/>
+															<f:actionListener binding="#{programaBean.remover()}" />
+															<f:ajax render=":frmModalRegistro"/>
+														</h:commandLink>
+													</h:column>
+
+												</h:dataTable>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> <!-- FIN: 3.2 SESIÓN - CONTENIDO PRINCIPAL -->
+
+						</div> <!-- 6.2 FIN: MENSAJE DEL MODAL -->
+
+						<!-- 6.3 BOTONES DEL MODAL -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCerrar}</button>
+							<h:commandButton class="btn btn-primary" id="btnRecargar" value="#{msgs.programaRefresh}" title="Refrescar listas de Usuarios.">
+								<f:setPropertyActionListener target="#{programaBean.programa}" value="#{programaAuxBean.programa}"/>
+								<f:actionListener binding="#{programaBean.obtenerUsuariosHab()}" />
+								<f:actionListener binding="#{programaBean.obtenerUsuariosDeshab()}" />
+								<f:ajax render=":frmModalRegistro" />
+							</h:commandButton>
+						</div> <!-- 6.3 FIN: BOTONES DEL MODAL -->
+
+					</div>
+				</div>
+			</h:form>					
+
+		</div> <!-- 6. CIERRE DEL MODAL DE REGISTROS-->
+
+		<br/>
+		<br/>
     </h:body>
     <h:outputScript>
         var rutaIconos="#{resource['ui/icons.svg']}";
