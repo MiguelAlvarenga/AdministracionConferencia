@@ -118,56 +118,7 @@
                     </div>
 
 
-                    <div id="divTipoPlantilla" class="hidden">
-
-                        <br/>
-                        <h:form>
-                            <h:commandLink class="btn btn-primary" value="#{msgs.plantillaTPBtnNuevo}" onclick="$('#modalEditarTipoPlantilla').modal('show');">
-                                <f:actionListener binding="#{tipoPlantillaBean.limpiar()}"/>
-                                <f:actionListener binding="#{tipoPlantillaBean.setNuevo(true)}"/>
-                                <f:ajax render=":frmModalEditarTipoPlantilla"/>
-                            </h:commandLink>
-                        </h:form>
-                        <br/>
-                        <!--Filtro de busqueda-->
-                        <h:form onkeypress="return event.keyCode !== 13;">
-                            <h4>Filtro:</h4>
-                            <input id="filterTPl" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrarTPl('.concat(plantillaCorreoBean.getLista().size())).concat(')')}"></input>
-                        </h:form>
-                        <br/>
-                        
-                        <h:form id="frmPrincipal2">
-                            <div class="table-responsive">
-                                <h:dataTable id="dtPrincipal" styleClass="tablaTPl table table-hover table-striped table-bordered" columnClasses="td-id,td-left, td-btn" value="#{tipoPlantillaBean.getLista()}" var="tipoPlantilla">
-
-                                    <h:column>
-                                        <f:facet name="header">Id</f:facet>
-                                        <h:outputLabel class="celda" value="#{tipoPlantilla.idTipoPlantilla}"/>
-                                    </h:column>
-
-                                    <h:column>
-                                        <f:facet name="header">#{msgs.usuarioHeaderNombre}</f:facet>
-                                        <h:outputLabel class="celda" value="#{tipoPlantilla.nombre}"/> 
-                                    </h:column>
-
-                                    <h:column>
-                                        <f:facet name="header">-</f:facet>										
-                                        <h:commandLink class="glyphicon glyphicon-edit" title="#{msgs.usuarioTitleEditar}" onclick="$('#modalEditarTipoPlantilla').modal('show');">
-                                            <f:actionListener binding="#{tipoPlantillaBean.setNuevo(false)}" />
-                                            <f:setPropertyActionListener target="#{tipoPlantillaBean.tipoPlantilla}" value="#{tipoPlantilla}"/>
-                                            <f:ajax render=":frmModalEditarTipoPlantilla"/>
-                                        </h:commandLink>
-                                        &nbsp;&nbsp;
-                                        <h:commandLink class="glyphicon glyphicon-remove" title="#{msgs.usuarioTitleEliminar}" onclick="$('#modalEliminarTipoPlantilla').modal('show');">
-                                            <f:setPropertyActionListener target="#{tipoPlantillaBean.tipoPlantilla}" value="#{tipoPlantilla}"/>
-                                            <f:ajax render=":frmModalEliminarTipoPlantilla"/>
-                                        </h:commandLink>
-                                    </h:column>
-
-                                </h:dataTable>
-                            </div>
-                        </h:form>
-                    </div>
+                    
 
                 </div>
             </ui:define>
@@ -324,88 +275,11 @@
 
 
         <!-- 7. MODAL: FORMULARIO PARA VER/EDITAR/CREAR REGISTROS-->
-        <div id="modalEditarTipoPlantilla" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <h:form id="frmModalEditarTipoPlantilla" >
-                <div class="modal-dialog modal-sm" role="document">
-                    <div class="modal-content">
-
-                        <!-- 7.1 ENCABEZADO DEL MODAL -->
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">
-                                <h:outputLabel id="txtTitulo" value="#{tipoPlantillaBean.tituloModal}">
-                                    <f:ajax event="blur"/>
-                                </h:outputLabel>
-
-                            </h4>
-                        </div> <!-- 7.1 FIN: ENCABEZADO DEL MODAL -->
-
-                        <!-- 7.2 CAMPOS DEL MODAL -->
-                        <div class="modal-body">
-                            <br/>
-                            <label>Id: </label>
-                            <h:inputText id="txtId" class="form-control" p:placeholder="Id" value="#{tipoPlantillaBean.tipoPlantilla.idTipoPlantilla}" readonly="true">
-                                <f:ajax event="blur" />
-                            </h:inputText>
-                            <br/>
-                            <label>#{msgs.usuarioHeaderNombre}: </label>
-                            <h:inputText immediate="true" required="true" label=" " id="txtNombre" class="form-control" p:placeholder="#{msgs.usuarioHeaderNombre}" value="#{tipoPlantillaBean.tipoPlantilla.nombre}">
-                                <f:validateRequired/>
-                                <f:validateLength minimum="5" maximum="100"/>
-                                <f:ajax event="blur" render="txtNombreVal"/>
-                            </h:inputText>
-                            <small class="text-muted red-color-text"> <h:message id="txtNombreVal" for="txtNombre"/> </small>    
-                            <br/>
-                        </div> <!-- 7.2 FIN: CAMPOS DEL MODAL -->
-
-                        <!-- 7.3 BOTONES DEL MODAL -->
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
-                            <h:commandLink id="btnGuardar" class="btn btn-primary" value="#{msgs.btnGuardar}" onclick="$('#modalEditarTipoPlantilla').modal('hide');">
-                                <f:actionListener binding="#{tipoPlantillaBean.guardar()}" />
-                                <f:actionListener binding="#{tipoPlantillaBean.obtenerTodos()}" />
-                                <f:ajax render=":frmPrincipal2 :frmMensajeGlobal" />
-                            </h:commandLink>
-                        </div> <!-- 7.3 FIN: BOTONES DEL MODAL -->
-
-                    </div>
-                </div>
-            </h:form>									
-        </div> <!-- 7. CIERRE DEL MODAL DE EDITAR-->
+        <!-- 7. CIERRE DEL MODAL DE EDITAR-->
 
 
         <!-- 8. MODAL: FORMULARIO PARA ELIMINAR REGISTROS-->
-        <div class="modal fade" id="modalEliminarTipoPlantilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <h:form id="frmModalEliminarTipoPlantilla">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-
-                        <!-- 8.1 ENCABEZADO DEL MODAL -->
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">
-                                <h:outputLabel id="txtTitulo" value="#{msgs.plantillaEliminarPlantillaTP}" />
-                            </h4>
-                        </div> <!-- 8.1 FIN: ENCABEZADO DEL MODAL -->
-
-                        <!-- 8.2 MENSAJE DEL MODAL -->
-                        <div id="ContFormEliminar" class="modal-body">
-                            #{msgs.eliminarRegistro}
-                        </div> <!-- 8.2 FIN: MENSAJE DEL MODAL -->
-
-                        <!-- 8.3 BOTONES DEL MODAL -->
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
-                            <h:commandLink id="btnEliminar" class="btn btn-danger" value="#{msgs.btnEliminar}" onclick="$('#modalEliminarTipoPlantilla').modal('hide');">
-                                <f:actionListener binding="#{tipoPlantillaBean.eliminar()}" />
-                                <f:ajax render=":frmPrincipal2 :frmMensajeGlobal" />
-                            </h:commandLink>	
-                        </div> <!-- 8.3 FIN: BOTONES DEL MODAL -->
-
-                    </div>
-                </div>
-            </h:form>											
-        </div> <!-- 8. CIERRE DEL MODAL DE ELIMINAR -->
+        <!-- 8. CIERRE DEL MODAL DE ELIMINAR -->
 
         <!-- 9. MODAL: AYUDA-->
         <div class="modal fade" id="modalAyuda" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
