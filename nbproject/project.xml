@@ -121,6 +121,7 @@
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>MODAL</word>
             <word>Navigation</word>
+            <word>nbsl</word>
         </spellchecker-wordlist>
     </configuration>
 </project>

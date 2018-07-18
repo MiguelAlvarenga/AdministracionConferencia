@@ -424,14 +424,17 @@
                         </div>
                         <div class="modal-body">
                             <h:form id="frmEnlace"><br></br>
-                                <h4>#{msgs.enlaceDeAsistente}&nbsp;<span class="btn glyphicon glyphicon-copy" onclick="copiarTexto('#{plantillaCorreoBean.conferencia.attendeeurl}')"></span>: </h4>
-                                <a href="#{plantillaCorreoBean.conferencia.attendeeurl}">#{plantillaCorreoBean.conferencia.attendeeurl}</a><br></br>
+                                <h4>#{msgs.enlaceDeAsistente}&nbsp;<span class="btn glyphicon glyphicon-copy" onclick="copiarTexto('#{plantillaCorreoBean.conferencia.attendeeurl}', 'txtAttenderrul')"></span><a href="#{plantillaCorreoBean.conferencia.attendeeurl}" style="color:black;" target="_blank"><span class="btn glyphicon glyphicon-new-window"></span></a>: </h4>
+                                
+                                <input id="txtAttenderrul" class="form-control" type="text" value="#{plantillaCorreoBean.conferencia.attendeeurl}"/><br></br>
                                 <hr></hr>
-                                <h4>#{msgs.enlaceDeModerador}&nbsp;<span class="btn glyphicon glyphicon-copy" onclick="copiarTexto('#{plantillaCorreoBean.conferencia.moderatorurl}')"></span>: </h4>
-                                <a href="#{plantillaCorreoBean.conferencia.moderatorurl}">#{plantillaCorreoBean.conferencia.moderatorurl} </a><br></br>
+                                <h4>#{msgs.enlaceDeModerador}&nbsp;<span class="btn glyphicon glyphicon-copy" onclick="copiarTexto('#{plantillaCorreoBean.conferencia.moderatorurl}', 'txtModeratorUrl')"></span><a href="#{plantillaCorreoBean.conferencia.moderatorurl}" style="color:black;" target="_blank"><span class="btn glyphicon glyphicon-new-window"></span></a>: </h4>
+                                
+                                <input id="txtModeratorUrl" class="form-control" type="text" value="#{plantillaCorreoBean.conferencia.moderatorurl}"/><br></br>
                                 <hr></hr>
-                                <h4>#{msgs.enlaceDeGrabacion}&nbsp;<span class="btn glyphicon glyphicon-copy" onclick="copiarTexto('#{plantillaCorreoBean.conferencia.recordingurl}')"></span>: </h4><a href="#{plantillaCorreoBean.conferencia.recordingurl}">#{plantillaCorreoBean.conferencia.recordingurl}</a>
-                                <input type="text" id="textoCopiar" style="color: white;" spellcheck="false"></input>
+                                <h4>#{msgs.enlaceDeGrabacion}&nbsp;<span class="btn glyphicon glyphicon-copy" onclick="copiarTexto('#{plantillaCorreoBean.conferencia.recordingurl}', 'txtRecordingUrl')"></span><a href="#{plantillaCorreoBean.conferencia.recordingurl}" style="color:black;"  target="_blank"><span class="btn glyphicon glyphicon-new-window"></span></a>: </h4>
+                                
+                                <input id="txtRecordingUrl" class="form-control" type="text" value="#{plantillaCorreoBean.conferencia.recordingurl}"/>
                             </h:form>
                         </div>
                     </div>    
@@ -813,12 +816,13 @@
             
         });
         
-        function copiarTexto(texto){
-            $("#textoCopiar").val(texto);
-            var textoACopiar = document.getElementById('textoCopiar');
+        function copiarTexto(texto, id){
+            $(id).val(texto);
+            var textoACopiar = document.getElementById(id);
             textoACopiar.select();
             document.execCommand("copy");
         }
+        
     </script>
 
     <style>
