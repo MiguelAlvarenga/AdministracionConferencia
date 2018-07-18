@@ -191,12 +191,17 @@ public class IndexBean implements Serializable {
     private void obtenerGrabaciones() {
         FacesContext fc = FacesContext.getCurrentInstance();
         sesionUBean s = fc.getApplication().evaluateExpressionGet(fc, "#{sesionUBean}", sesionUBean.class);
-
+        
         ConferenciaDao daoConferencia = new ConferenciaDao();
-        if(s.getUsuario()==null){
+        if(sesionUBean.sesionUsuario == 0){
             listaGrabaciones = daoConferencia.obtenerGrabaciones();
         }else{
-            listaGrabaciones = daoConferencia.obtenerTodasGrabaciones();
+            if(s.getUsuario().getIdRol().getIdRol() == 1){
+                listaGrabaciones = daoConferencia.obtenerTodasGrabaciones();
+            }else{
+                listaGrabaciones = daoConferencia.obtenerGrabacionesXUsuario(s.getUsuario());
+            }
+            
         }
     }
 

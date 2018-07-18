@@ -74,6 +74,8 @@ public class Usuario implements Serializable {
     private short intentos;
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "idResponsable")
     private List<UsuarioXPrograma> usuarioXProgramaList;
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "idConferencia")
+    private List<Conferencia> conferenciaList;
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "idUsuario")
     private List<Programa> programaList;
     @JoinColumn(name = "id_rol", referencedColumnName = "id_rol")
@@ -186,6 +188,15 @@ public class Usuario implements Serializable {
 
     public void setProgramaList(List<Programa> programaList) {
         this.programaList = programaList;
+    }
+    
+    @XmlTransient
+     public List<Conferencia> getConferenciaList() {
+        return conferenciaList;
+    }
+
+    public void setConferenciaList(List<Conferencia> conferenciaList) {
+        this.conferenciaList = conferenciaList;
     }
 
     public Rol getIdRol() {

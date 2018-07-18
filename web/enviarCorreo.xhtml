@@ -18,13 +18,20 @@
         <h:outputScript library="js" name="bootstrap.js" />
         <h:outputScript library="js" name="trumbowyg.js" />		
         <h:outputScript library="js" name="trumbowyg_load.js" />
+        <h:outputScript library="js" name="selectize.js" />
+        
 
         <h:outputStylesheet library="css" name="bootstrap.css" />
         <h:outputStylesheet library="css" name="plantilla_maestra.css" />
         <h:outputStylesheet library="css" name="main.css" />
         <h:outputStylesheet library="css" name="trumbowyg.css" />
         <h:outputStylesheet library="css" name="general.css" />
-        <h:outputStylesheet library="css" name="table.css" />		
+        <h:outputStylesheet library="css" name="table.css" />	
+        <h:outputStylesheet library="css" name="selectize.bootstrap3.css" />
+        <h:outputStylesheet library="css" name="selectize.bootstrap2.css" />
+        <h:outputStylesheet library="css" name="selectize.css" />
+        <h:outputStylesheet library="css" name="selectize.default.css" />
+        <h:outputStylesheet library="css" name="selectize.legacy.css" />
     </h:head>
 
     <h:body>
@@ -43,15 +50,15 @@
 
                         <h:form id="frmEnviarCorreo">
                             <label>#{msgs.correoPara}:</label>
-                            <h:inputText id="txtCorreoPara" styleClass="form-control" value="#{enviarCorreoBean.txtCorreoPara}"> 
-                                <f:ajax   event="blur"/>
+                            <h:inputText id="txtCorreoPara" styleClass="form-control emailTo" value="#{enviarCorreoBean.txtCorreoPara}"> 
+                                <f:ajax   event="change"/>
                             </h:inputText>
                             <small class="text-muted">#{msgs.correoParaIns} (;)</small>
                             <br/><br/>
 
                             <label>CC:</label>
-                            <h:inputText id="txtCorreoCC" styleClass="form-control" value="#{enviarCorreoBean.txtCorreoCC}"> 
-                                <f:ajax   event="blur"/>
+                            <h:inputText id="txtCorreoCC" styleClass="form-control emailCC" value="#{enviarCorreoBean.txtCorreoCC}"> 
+                                <f:ajax   event="change"/>
                             </h:inputText>
                             <small class="text-muted">#{msgs.correoParaIns} (;)</small>
                             <br/><br/>
@@ -89,5 +96,33 @@
         var rutaIconos="#{resource['ui/icons.svg']}";
     </h:outputScript>
 
+    
+    <script>
+$('.emailTo').selectize({
+      plugins: ['remove_button'],
+      delimiter: ',',
+      persist: false,
+      create: function(input) {
+          return {
+              value: input,
+              text: input
+          }
+      }
+    });
+    
+    $('.emailCC').selectize({
+      plugins: ['remove_button'],
+      delimiter: ',',
+      persist: false,
+      create: function(input) {
+          return {
+              value: input,
+              text: input
+          }
+      }
+    });
+    
+    
+    </script>
 </html>
 

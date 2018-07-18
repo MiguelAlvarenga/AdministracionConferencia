@@ -35,6 +35,7 @@ public class sesionUBean implements Serializable {
     private boolean loggedFirstTime = false;	 //La primera vista mostrar mensaje, la otra no
     private int loggedFail = 0;	 //La primera vista mostrar mensaje, la otra no. 0 es nada 1 es error 2 es bloqueado.	
     private boolean cambioPwdExitoso;
+    public static int sesionUsuario = 0;
 
     public String getUser() {
         return user;
@@ -190,6 +191,7 @@ public class sesionUBean implements Serializable {
                             usuario.setIntentos((short) 0);
                             UsuarioDao daoUsuario = new UsuarioDao();
                             daoUsuario.actualizarIntentos(usuario);
+                            sesionUsuario = usuario.getIdUsuario();
                         } else {
                             loggedFail = 1;
                             alertMsg = resourceBundle.getString("SesionContraInvalida") + ": " + usuario.getUsuario();
@@ -197,6 +199,7 @@ public class sesionUBean implements Serializable {
                             usuario.setIntentos((short) (usuario.getIntentos() + 1));
                             UsuarioDao daoUsuario = new UsuarioDao();
                             daoUsuario.actualizarIntentos(usuario);
+                            
                         }
                     }
                 } else {
@@ -257,6 +260,7 @@ public class sesionUBean implements Serializable {
         if (logged) {
             usuario = null;
             logged = false;
+            sesionUsuario = 0;
             alertMsg = resourceBundle.getString("SesionCierreExitoso");
             mensajeGlobalInformativo(alertMsg);
 
@@ -286,6 +290,7 @@ public class sesionUBean implements Serializable {
             return true;
         }
         if (pagina.endsWith("CONFERENCIAS.XHTML") && logged) {
+            System.out.println(usuario.getIdRol().getIdRol().toString());
             return true;
         }
         if (pagina.endsWith("CONFIGURACION.XHTML") && logged && usuario.getIdRol().getIdRol() == 1) {
@@ -297,7 +302,7 @@ public class sesionUBean implements Serializable {
         if (pagina.endsWith("PLANTILLASCORREO.XHTML") && logged && usuario.getIdRol().getIdRol() == 1) {
             return true;
         }
-        if (pagina.endsWith("PROGRAMAS.XHTML") && logged && usuario.getIdRol().getIdRol() == 1) {
+        if (pagina.endsWith("PROGRAMAS.XHTML") && logged && (usuario.getIdRol().getIdRol() == 1 || usuario.getIdRol().getIdRol() == 3)) {
             return true;
         }
         if (pagina.endsWith("USUARIOS.XHTML") && logged && usuario.getIdRol().getIdRol() == 1) {

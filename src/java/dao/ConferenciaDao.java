@@ -34,7 +34,7 @@ public class ConferenciaDao {
 	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("AdministradorConferenciasUP");
 	private EntityManager em;
 
-	public void insertar(Conferencia c, int idEstadoConferencia, int idUsuarioXPrograma) {
+	public void insertar(Conferencia c, int idEstadoConferencia, int idUsuarioXPrograma, int idUsuarioAux) {
 		try {
 			Calendar fechaActual = Calendar.getInstance();
 
@@ -42,6 +42,8 @@ public class ConferenciaDao {
 			em = emf.createEntityManager();
 			em.getTransaction().begin();
 			EstadoConferencia estadoConferencia = em.find(EstadoConferencia.class, idEstadoConferencia);
+                        Usuario usuario = em.find(Usuario.class, idUsuarioAux);
+                        c.setIdUsuario(usuario);
 			c.setIdEstadoConferencia(estadoConferencia);
 			UsuarioXPrograma usuarioXPrograma = em.find(UsuarioXPrograma.class, idUsuarioXPrograma);
 			c.setIdUsuarioXPrograma(usuarioXPrograma);
@@ -180,6 +182,21 @@ public class ConferenciaDao {
 
 		return lista;
 	}
+        
+        public List<Conferencia> obtenerTodosXUsuario(Usuario idUsuario) {
+		em = emf.createEntityManager();
+		em.getTransaction().begin();
+
+		Query query = em.createNamedQuery("Conferencia.findByIdUsuario", Conferencia.class);
+                query.setParameter("idUsuario", idUsuario);
+		List<Conferencia> lista = query.getResultList();
+
+		em.getTransaction().commit();
+		em.close();
+		emf.close();
+
+		return lista;
+	}
 
 	public List<Conferencia> obtenerTodosIndex() {
 		em = emf.createEntityManager();
@@ -238,6 +255,23 @@ public class ConferenciaDao {
                 
 
 		TypedQuery<Conferencia> sql = em.createQuery("SELECT c FROM Conferencia c WHERE c.idEstadoConferencia=4 AND c.tipoConferencia=FALSE AND c.recordingurl IS NOT NULL", Conferencia.class);
+                List<Conferencia> lista = sql.getResultList();
+
+		em.getTransaction().commit();
+		em.close();
+		emf.close();
+
+		return lista;
+	}
+        
+        public List<Conferencia> obtenerGrabacionesXUsuario(Usuario idUsuario) {
+		em = emf.createEntityManager();
+		em.getTransaction().begin();
+
+                
+
+		TypedQuery<Conferencia> sql = em.createQuery("SELECT c FROM Conferencia c WHERE c.idEstadoConferencia=4 AND c.recordingurl IS NOT NULL AND c.idUsuario=:idUsuario", Conferencia.class);
+                sql.setParameter("idUsuario", idUsuario);
                 List<Conferencia> lista = sql.getResultList();
 
 		em.getTransaction().commit();

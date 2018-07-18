@@ -29,6 +29,9 @@ public class ProgramaBean implements Serializable {
     private List<Programa> lista = new ArrayList<>();
     private List<Usuario> listaUsuarios = new ArrayList<>();
     private List<Usuario> listaUsuariosHabilitados = new ArrayList<>();
+    private List<Usuario> listaUsuariosHabilitadosPop = new ArrayList<>();
+
+    
     private List<Usuario> listaUsuariosDeshabilitados = new ArrayList<>();
     private List<UsuarioXPrograma> registroUXP = new ArrayList<>();
 
@@ -123,6 +126,16 @@ public class ProgramaBean implements Serializable {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+    
+    public List<Usuario> getListaUsuariosHabilitadosPop(Programa programa) {
+        UsuarioXProgramaDao daoUXP = new UsuarioXProgramaDao();
+        listaUsuariosHabilitadosPop = daoUXP.obtenerTodosUsuariosHabilitados(programa.getIdPrograma());
+        return listaUsuariosHabilitadosPop;
+    }
+
+    public void setListaUsuariosHabilitadosPop(List<Usuario> listaUsuariosHabilitadosPop) {
+        this.listaUsuariosHabilitadosPop = listaUsuariosHabilitadosPop;
+    }
 
     public List<Programa> getLista() {
         return lista;
@@ -145,6 +158,28 @@ public class ProgramaBean implements Serializable {
             }
             try {
                 daoPrograma.insertar(programa, idUsuarioAux);
+                UsuarioXProgramaDao daoUXP = new UsuarioXProgramaDao();
+
+            try {
+
+                registroUXP = daoUXP.obtenerRegistro(idUsuarioAux, programa.getIdPrograma());
+
+                if (registroUXP.isEmpty()) {
+                    daoUXP = new UsuarioXProgramaDao();
+                    daoUXP.insertar(programa, usuario);
+                } else {
+                    registroUXP.get(0).setActivo(true);
+                    daoUXP = new UsuarioXProgramaDao();
+                    daoUXP.actualizar(registroUXP.get(0));
+                }
+
+                listaUsuariosHabilitados.add(usuario);
+                listaUsuariosDeshabilitados.remove(usuario);
+
+                //		obtenerUsuariosHab();
+                //		obtenerUsuariosDeshab();
+            } catch (Exception ex) {
+            }
                 mensajeGlobalInformativo(resourceBundle.getString("Registro") + " '" + programa.getNombre() + "' " + resourceBundle.getString("InsertExito"));
             } catch (Exception ex) {
                 mensajeGlobalError(resourceBundle.getString("ErrorIns") + " '" + programa.getNombre() + "'; " + resourceBundle.getString("ErrorIns2"));
@@ -238,8 +273,15 @@ public class ProgramaBean implements Serializable {
     }
 
     public void obtenerTodos() {
+        
         ProgramaDao daoPrograma = new ProgramaDao();
-        lista = daoPrograma.obtenerTodos();
+        UsuarioDao ud = new UsuarioDao();
+        Usuario usuarioProgramas = ud.obtenerUsuario(sesionUBean.sesionUsuario);
+        if(usuarioProgramas.getIdRol().getIdRol() == 1){
+            lista = daoPrograma.obtenerTodos();
+        }else{
+            lista = daoPrograma.obtenerTodosXUsuario(usuarioProgramas);
+        }
         UsuarioDao daoUsuario = new UsuarioDao();
         listaUsuarios = daoUsuario.obtenerTodos();
     }
@@ -252,6 +294,16 @@ public class ProgramaBean implements Serializable {
     public void obtenerUsuariosDeshab() {
         UsuarioXProgramaDao daoUXP = new UsuarioXProgramaDao();
         listaUsuariosDeshabilitados = daoUXP.obtenerTodosUsuariosDeshabilitados(programa.getIdPrograma());
+    }
+    
+    public void obtenerUsuariosHabWrap(Programa program) {
+        UsuarioXProgramaDao daoUXP = new UsuarioXProgramaDao();
+        listaUsuariosHabilitados = daoUXP.obtenerTodosUsuariosHabilitados(program.getIdPrograma());
+    }
+
+    public void obtenerUsuariosDeshabWrap(Programa program) {
+        UsuarioXProgramaDao daoUXP = new UsuarioXProgramaDao();
+        listaUsuariosDeshabilitados = daoUXP.obtenerTodosUsuariosDeshabilitados(program.getIdPrograma());
     }
 
     public void limpiar() {

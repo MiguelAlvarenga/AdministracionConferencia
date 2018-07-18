@@ -113,6 +113,16 @@ public class UsuarioDao {
 		em.close();
 		emf.close();
 	}
+        
+        public Usuario obtenerUsuario(int id){
+            em.getTransaction().begin();
+            Usuario usuario = em.find(Usuario.class, id);
+            em.getTransaction().commit();
+            em.close();
+            emf.close();
+            return usuario;
+            
+        }
 
 	public List<Usuario> obtenerTodos() {
 

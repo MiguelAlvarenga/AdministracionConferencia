@@ -20,6 +20,6 @@ var config = {attributes: false, childList: true, characterData: false, subtree:
 
 // Iniciamos la observación
 observer.observe(target, config);
-observer.observe(target2,config);
+//observer.observe(target2,config);
 // Si se desea, esta función detiene el Observador y ya noesta pendiente del objeto.
 //observer.disconnect();

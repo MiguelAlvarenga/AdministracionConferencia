@@ -12,8 +12,6 @@
 
 
         <link rel="icon" type="image/png" href="#{resource['img/logo_bbb.png']}" />
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
         
         <title>Administrador de Conferencias</title>
 
@@ -26,6 +24,8 @@
         <h:outputScript library="js" name="paginationW.js" />
         <h:outputScript library="js" name="jquery-ui.js"/>
         <h:outputScript library="js" name="datePicker.js"/>
+        <h:outputScript library="js" name="bootstrap-datetimepicker.min.js"/>
+        <h:outputScript library="js" name="bootstrap-datetimepicker.es.js"/>
         
         <h:outputStylesheet library="css" name="bootstrap.css" />
         <h:outputStylesheet library="css" name="plantilla_maestra.css" />
@@ -35,6 +35,8 @@
         <h:outputStylesheet library="css" name="table.css" />
         <h:outputStylesheet library="css" name="pagination.css" />
         <h:outputStylesheet library="css" name="jquery-ui.css"/>
+        <h:outputStylesheet library="css" name="bootstrap-datetimepicker.min.css"/>
+        
         
     </h:head>
 
@@ -70,28 +72,59 @@
                         <input id="filter" type="text" class="form-control" placeholder="..." onkeyup="#{('filtrar('.concat(conferenciaBean.lista.size())).concat(')')}"></input>
                     </h:form>
                     <br/>
-                    
+                    <!--<ul>
+                        
+                            <ui:repeat value="#{conferenciaBean.lista}" var="book">
+                                    <li>
+                                        <h:link value="#{book.title}" outcome="book">
+                                            <f:param name="id" value="#{book.id}" />
+                                        </h:link>
+                                    </li>
+                                </ui:repeat>
+                            </ul>-->
                     <h:form id="frmPrincipal">
-
+                        
                         <div class="table-responsive centered-heading">
-                            <h:dataTable id="dtPrincipal" styleClass="paginacion table table-hover table-striped table-bordered" columnClasses="td-id, td-left, td-left, td-left, td-center, td-center, td-btn3" value="#{conferenciaBean.lista}" var="conferencia">
+                            <h:dataTable id="dtPrincipal" styleClass="paginacion table table-hover table-striped table-bordered " columnClasses="td-id, td-left, td-left, td-left, td-center, td-center, td-btn3" value="#{conferenciaBean.lista}" var="conferencia">
 
                                 <h:column>
                                     <f:facet name="header">Id</f:facet>
                                     <h:outputLabel class="celda" value="#{conferencia.idConferencia}"/>
                                 </h:column>
-
+                                
                                 <h:column>
-                                    <f:facet name="header">#{msgs.usuarioHeaderNombre}</f:facet>
-                                    <h:outputLabel class="celda" value="#{conferencia.nombre}"/> 
+                                    <f:facet name="header">#{msgs.conferenciaCreadaPor}</f:facet>
+                                    
+                                    <div class="popover__wrapper">
+                                          <h:outputLabel class="celda" value="#{conferencia.idUsuario.nombre}"/>
+                                        <div class="push popover__content">
+                                        <p>
+                                                #{msgs.nombreCreadaPor}:&nbsp;#{conferencia.idUsuario.nombre}&nbsp;#{conferencia.idUsuario.apellido}
+                                                <br></br>#{msgs.nombreUsuarioPor}:&nbsp;#{conferencia.idUsuario.usuario}
+                                            </p>
+                                        </div>
+                                       </div>
                                 </h:column>
 
-                                <h:column>
+                                <h:column class="clasePopUp">
+                                    <f:facet name="header">#{msgs.usuarioHeaderNombre}</f:facet>
+                                    <div class="popover__wrapper">
+                                          <h:outputLabel class="celda" value="#{conferencia.nombre}"/>
+                                        <div class="push popover__content">
+                                        <p>
+                                                #{msgs.fechaCreacionConferencia}:&nbsp;#{conferenciaBean.getFechaCreStr(conferencia)}
+                                                <br></br>#{msgs.conGrabacion}:&nbsp;#{conferencia.grabacion? msgs.siConGrabacion:msgs.noConGrabacion}
+                                            </p>
+                                        </div>
+                                      </div>
+                                </h:column>
+
+                                <h:column class="clasePopUp">
                                     <f:facet name="header">#{msgs.indexHeaderPrograma}</f:facet>
                                     <h:outputLabel class="celda" value="#{conferencia.idUsuarioXPrograma.idPrograma.nombre}"/> 
                                 </h:column>
 
-                                <h:column>
+                                <h:column class="clasePopUp">
                                     <f:facet name="header">#{msgs.conferenciaFechaPonencia}</f:facet>
                                     <h:outputLabel class="celda" value="#{conferenciaBean.getFechaStr(conferencia)}">
                                     </h:outputLabel>
@@ -100,6 +133,11 @@
                                 <h:column>
                                     <f:facet name="header">#{msgs.conferenciaTipo}</f:facet>
                                     <h:outputLabel class="celda" value="#{conferencia.tipoConferencia? msgs.indexConferenciaPrivada:msgs.indexConferenciaPublica}"/> 
+                                </h:column>
+                                
+                                <h:column>
+                                    <f:facet name="header">#{msgs.conferenciaContrasenia}</f:facet>
+                                    <h:outputLabel class="celda" value="#{conferencia.tipoConferencia? conferencia.attendeepw:''}"/> 
                                 </h:column>
 
                                 <h:column>
@@ -127,7 +165,7 @@
                                     </h:commandLink>
                                     &nbsp; 
                                     <!-- aqui va el boton para generar el enlace-->
-                                    <h:commandLink class ="glyphicon glyphicon-link " title="#{msgs.indexEnlace}" onclick="$('#modalEnlace').modal('show');">
+                                    <h:commandLink class ="glyphicon glyphicon-link " title="#{msgs.enlacesConferenciaModal}" onclick="$('#modalEnlace').modal('show');">
                                         <f:setPropertyActionListener target="#{plantillaCorreoBean.conferencia}" value="#{conferencia}"/>
                                         <f:ajax render=":frmEnlace"/>                                        
                                     </h:commandLink>
@@ -147,11 +185,21 @@
                                         <f:setPropertyActionListener target="#{conferenciaBean.conferencia}" value="#{conferencia}"/>
                                         <f:ajax render=":frmModalEliminar"/>
                                     </h:commandLink>
+                                    &nbsp; 
+                                    <h:commandLink id="btnIniciar" class="btn btn-primary" value="#{msgs.ModerIniciar}" onclick="$('#modalDatosP').modal('show');">
+                                        <f:setPropertyActionListener target="#{conferenciaBean.conferencia}" value="#{conferencia}"/>
+                                        <f:ajax render=":frmModalDatosP"/>
+                                    </h:commandLink>
+                                    <h:commandLink id="btnDetener" class="btn btn-danger" value="#{msgs.ModerDetener}" onclick="$('#modalFinalizar').modal('show');">
+                                        <f:setPropertyActionListener target="#{conferenciaBean.conferencia}" value="#{conferencia}"/>
+                                        <f:ajax render=":frmModalFinalizar"/>
+                                    </h:commandLink>
 
                                 </h:column>
 
                             </h:dataTable>
                         </div>
+                        
                         <center>
                             <div class="paging-container " id="tablePaging">
                             </div>
@@ -167,7 +215,8 @@
             <h:form id="frmModalEditar" >
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
-
+                        <h:inputHidden id="idUsuario" class="form-control" value="#{sesionUBean.usuario.idUsuario}">
+                         </h:inputHidden>
                         <!-- 4.1 ENCABEZADO DEL MODAL -->
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -282,20 +331,23 @@
                                     <!--FECHA DEL FORMULARIO-->
                                     <label>#{msgs.conferenciaFechaPonencia}: </label> 
                                     
-                                    <h:inputText immediate="true" required="true" label=" " id="txtFchPonencia" class="form-control" p:placeholder="#{msgs.conferenciaFormato}: dd/MM/yyyy" value="#{conferenciaBean.fecha}">
+                                    <h:inputText immediate="true" required="true" label=" " id="txtFchPonencia" class="form-control datepickerF" p:placeholder="#{msgs.conferenciaFormato}: dd/MM/yyyy" value="#{conferenciaBean.fecha}">
                                         <f:validateRequired />
                                         <f:validator validatorId="fechaValidator"/>
-                                        <f:ajax   event="blur" render="txtFchPonenciaVal"/>
+                                        <f:ajax   event="change" render="txtFchPonenciaVal"/>
                                     </h:inputText>
                                     <small class="text-muted red-color-text"> <h:message id="txtFchPonenciaVal" for="txtFchPonencia"/> </small>
                                     <br/>
+                                    <select id="selDias">
+                                        
+                                    </select>
                                 </div>
 
-                                <div class="col-sm-3">
+                                <div class="col-sm-3" >
                                     <label>#{msgs.conferenciaHoraPonencia}: </label>  
-                                    <h:inputText id="txtHrPonencia" class="form-control" p:placeholder="#{msgs.conferenciaFormato}: HH:MM am/pm" value="#{conferenciaBean.conferencia.horaPonencia}">
+                                    <h:inputText id="txtHrPonencia" class="form-control timepickerR" p:placeholder="#{msgs.conferenciaFormato}: HH:MM am/pm" value="#{conferenciaBean.conferencia.horaPonencia}">
                                         <f:validator validatorId="horaValidator"/>
-                                        <f:ajax   event="blur" render="txtHrPonenciaVal"/>
+                                        <f:ajax   event="change" render="txtHrPonenciaVal"/>
                                     </h:inputText>
                                     <small class="text-muted red-color-text"> <h:message id="txtHrPonenciaVal" for="txtHrPonencia"/> </small>
                                     <br/>
@@ -369,12 +421,19 @@
                         <div class="modal-header">
                             <h4 class="modal-title" id="myModalLabel">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h:outputLabel id="txtTituloFiles" value="Enlace"/>
+                                <h:outputLabel id="txtTituloFiles" value="#{msgs.enlacesConferenciaModal}"/>
                             </h4>
                         </div>
                         <div class="modal-body">
-                            <h:form id="frmEnlace">
-                                <h:commandLink value="#{plantillaCorreoBean.conferencia.attendeeurl}" id="enlace"/>       
+                            <h:form id="frmEnlace"><br></br>
+                                <h4>#{msgs.enlaceDeAsistente}&nbsp;<span class="btn glyphicon glyphicon-copy" onclick="copiarTexto('#{plantillaCorreoBean.conferencia.attendeeurl}')"></span>: </h4>
+                                <a href="#{plantillaCorreoBean.conferencia.attendeeurl}">#{plantillaCorreoBean.conferencia.attendeeurl}</a><br></br>
+                                <hr></hr>
+                                <h4>#{msgs.enlaceDeModerador}&nbsp;<span class="btn glyphicon glyphicon-copy" onclick="copiarTexto('#{plantillaCorreoBean.conferencia.moderatorurl}')"></span>: </h4>
+                                <a href="#{plantillaCorreoBean.conferencia.moderatorurl}">#{plantillaCorreoBean.conferencia.moderatorurl} </a><br></br>
+                                <hr></hr>
+                                <h4>#{msgs.enlaceDeGrabacion}&nbsp;<span class="btn glyphicon glyphicon-copy" onclick="copiarTexto('#{plantillaCorreoBean.conferencia.recordingurl}')"></span>: </h4><a href="#{plantillaCorreoBean.conferencia.recordingurl}">#{plantillaCorreoBean.conferencia.recordingurl}</a>
+                                <input type="text" id="textoCopiar" style="color: white;" spellcheck="false"></input>
                             </h:form>
                         </div>
                     </div>    
@@ -630,7 +689,85 @@
                 </div>
             </h:form>											
         </div> <!-- 8. CIERRE DEL MODAL DE ELIMINAR Archivos-->
+                <div class="modal fade" id="modalFinalizar"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <h:form id="frmModalFinalizar">
 
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+
+                        <!-- 5.1 ENCABEZADO DEL MODAL -->
+
+                        <div class="modal-header">
+                            <button name="CerrarFinalizar" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <h:outputLabel id="txtTitulo" value="#{msgs.ModerDetenerWC}" />
+
+                            </h4>
+                        </div> <!-- 5.1 FIN: ENCABEZADO DEL MODAL -->
+
+
+                        <!-- 5.2 MENSAJE DEL MODAL -->
+                        <div id="ContFormEliminar" class="modal-body">
+                            #{msgs.ModerEstaSeguro} 
+                        </div> <!-- 5.2 FIN: MENSAJE DEL MODAL -->
+
+
+
+
+
+                        <!-- 5.3 BOTONES DEL MODAL -->
+
+                        <div class="modal-footer">
+                            <button name="btnCancelarFin" id="btnCancelarFin" type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
+                            <h:commandLink id="btnFinalizar" class="btn btn-danger" value="#{msgs.ModerDetener}" onclick="$('#modalFinalizar').modal('hide');">
+                                <f:actionListener binding="#{conferenciaBean.terminarVC()}"></f:actionListener>
+                                <f:ajax render=":frmMensajeGlobal"/>
+                            </h:commandLink>	
+                        </div> <!-- 5.3 FIN: BOTONES DEL MODAL -->
+
+
+                    </div>
+                </div>
+            </h:form>											
+        </div> <!-- 5. CIERRE DEL MODAL DE ELIMINAR-->
+        
+        <div class="modal fade" id="modalDatosP" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <h:form id="frmModalDatosP" >
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+
+                        <!-- 1.1 ENCABEZADO DEL MODAL -->
+                        <div class="modal-header">
+                            <button name="btnDatos" id="btnDatos" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <h:outputLabel id="txtTitulo" value="#{msgs.ModerNombreMostrar}" />
+                            </h4>
+                        </div> <!-- 1.1 FIN: ENCABEZADO DEL MODAL -->
+
+                        <!-- 1.2 CAMPOS DEL MODAL -->
+                        <div class="modal-body">
+                            <h:outputLabel for="txtNombrePer">#{msgs.usuarioHeaderNombre}</h:outputLabel>
+                            <h:inputText id="txtNombrePer" class="form-control" p:placeholder="#{msgs.usuarioHeaderNombre}" value="#{conferenciaBean.usuarioBbb}">
+                                <f:ajax   event="blur"/>
+                            </h:inputText>
+
+                        </div> <!-- 1.2 FIN: CAMPOS DEL MODAL -->
+
+                        <!-- 1.3 BOTONES DEL MODAL -->
+                        <div class="modal-footer">
+                            <button id="btnCancelarDatos" name="btnCancelarDatos" type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
+                            <h:commandLink value="#{msgs.ModerIniciar}" target="_new" action="#{conferenciaBean.redirect}" id="btnRedirect" class="btn btn-primary" onclick="$('#modalDatosP').modal('hide');">
+                            </h:commandLink>
+
+
+
+                        </div> <!-- 1.3 FIN: BOTONES DEL MODAL JSTL-->
+
+                    </div>
+                </div>
+            </h:form>									
+        </div> <!-- 1. CIERRE DEL MODAL DE DATOS PERSONALES-->	
+        
 
     </h:body>
     <h:outputScript>
@@ -640,4 +777,118 @@
         
     </h:outputScript>
 
+    <script>
+        $(function() {
+            $("body").delegate(".datepickerF", "focusin", function(){
+                $(this).datetimepicker({
+                        language:  'es',
+                        weekStart: 1,
+                        todayBtn:  1,
+                        autoclose: 1,
+                        todayHighlight: 1,
+                        startView: 2,
+                        minView: 2,
+                        forceParse: 0,
+                        format: 'dd/mm/yyyy',
+                        pickerPosition: "top-right"
+                });
+                
+            });
+            
+            $("body").delegate(".timepickerR", "focusin", function(){
+                $(this).datetimepicker({
+                        format: "HH:ii p",
+                        showMeridian: true,
+                        autoclose: true,
+                        todayBtn: false,
+                        pickerPosition: "top-right",
+                        startView: 1,
+                        minView: 0,
+                        maxView: 1,
+                        weekStart: false,
+                        minuteStep:1
+                });
+                
+            });
+            
+            
+            
+        });
+        
+        function copiarTexto(texto){
+            $("#textoCopiar").val(texto);
+            var textoACopiar = document.getElementById('textoCopiar');
+            textoACopiar.select();
+            document.execCommand("copy");
+        }
+    </script>
+
+    <style>
+        .popover__title {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 24px;
+            line-height: 36px;
+            text-decoration: none;
+            color: rgb(228, 68, 68);
+            text-align: center;
+            padding: 15px 0;
+          }
+
+          .popover__wrapper {
+              display: inline-block;
+              width: 100%;
+          }
+          .popover__content {
+              opacity: 0;
+              visibility: hidden;
+              position: absolute;
+              transform: translate(0,10px);
+              background-color: #337ab7;
+              color: white;
+              padding: 1.5rem;
+              box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+              width: auto;
+          }
+          .popover__content:before {
+              position: absolute;
+              z-index: -1;
+              content: '';
+              right: calc(50% - 10px);
+              top: -8px;
+              border-style: solid;
+              border-width: 0 10px 10px 10px;
+              border-color: transparent transparent #337ab7 transparent;
+              transition-duration: 0.3s;
+              transition-property: transform;
+          }
+          .popover__wrapper:hover .popover__content {
+              z-index: 1;
+              opacity: 1;
+              visibility: visible;
+              transition: all 0.5s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+          }
+          .popover__message {
+            text-align: left;
+          }
+          
+          #textoCopiar::-moz-selection{
+              color: white !important;
+              background-color: white !important;
+          }
+          
+          #textoCopiar::selection{
+              color: white !important;
+              background-color: white !important;
+          }
+          
+          #textoCopiar{
+              border:none;
+              cursor: default;
+              outline: none;
+              background-color: white;
+          }
+          .textoImportante{
+                background-color: #e5e7ea;
+            }
+    </style>
 </html>

@@ -234,6 +234,12 @@
                         <div id="rtfContenido">
                             #{msgs.plantillaMsjIngresar}
                         </div>
+                        
+                        <input type="button" value="Paste HTML" onclick="document.getElementById('rtfContenido').focus(); pasteHtmlAtCaret('INSER'); "/>
+
+                            <div id="test" contenteditable="true">
+                                Here is some nice text
+                            </div>
 
                     </div> <!-- 4.2 FIN: CAMPOS DEL MODAL -->
 
@@ -426,7 +432,10 @@
 
                             <table class="table table-bordered table-striped table-hover">
                                 <p>#{msgs.etiquetaDescripcion1}</p>
+                                <p>#{msgs.etiquetaDescripcion3} <img src="resources/img/tagimage.jpg"/> &nbsp;#{msgs.etiquetaDescripcion4}.
                                 <p>#{msgs.etiquetaDescripcion2} </p>
+                                
+                                </p>
                                 <br/>
                                 <tr>
                                     <th>#{msgs.etiquetaHeader1}</th>
@@ -455,10 +464,17 @@
                 </div>
             </h:form>											
         </div> <!-- 9. CIERRE DEL MODAL DE ELIMINAR -->	
+        <style>
+            .textoImportante{
+                background-color: #e5e7ea;
+            }
+        </style>
+        
     </h:body>
 
     <h:outputScript>
         var rutaIconos="#{resource['ui/icons.svg']}";
     </h:outputScript>
-
+    
+        
 </html>

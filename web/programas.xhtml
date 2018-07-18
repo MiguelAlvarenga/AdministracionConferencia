@@ -70,6 +70,28 @@
 								<h:column>
 									<f:facet name="header">#{msgs.usuarioHeaderNombre}</f:facet>
 									<h:outputLabel class="celda" value="#{programa.nombre}"/> 
+                                                                       <!-- <div class="popover__wrapper">
+                                                                            <h:outputLabel class="celda" value="#{programa.nombre}"/> 
+                                                                          <div class="push popover__content">
+                                                                              <h:dataTable id="dtRegistro2" styleClass="tablaUsuNo table table-hover table-striped table-condensed" columnClasses="td-left,td-left,td-lef, td-btn" value="#{programaBean.getListaUsuariosHabilitadosPop(programa)}" var="listaDesL">
+
+                                                                                    <h:column >
+                                                                                            <f:facet name="header">#{msgs.usuarioHeaderNombre}</f:facet>
+                                                                                            <h:outputLabel class="celda" value="#{listaDesL.nombre}"/> 
+                                                                                    </h:column>
+
+                                                                                    <h:column >
+                                                                                            <f:facet name="header">#{msgs.usuarioHeaderApellido}</f:facet>
+                                                                                            <h:outputLabel class="celda" value="#{listaDesL.apellido}"/> 
+                                                                                    </h:column>
+
+                                                                                    <h:column >
+                                                                                            <f:facet name="header">#{msgs.usuarioHeaderUsuario}</f:facet>
+                                                                                            <h:outputLabel class="celda" value="#{listaDesL.usuario}"/> 
+                                                                                    </h:column>
+                                                                            </h:dataTable>
+                                                                          </div>
+                                                                        </div>-->
 								</h:column>
 
 								<h:column>
@@ -107,7 +129,7 @@
 										<f:ajax onevent="mostrarModalEliminarPrograma" />
 									</h:commandLink>
 									&nbsp; &nbsp;
-									<h:commandLink class="glyphicon glyphicon-user" title="#{msgs.programaAsociar}" >
+                                                                        <h:commandLink class="glyphicon glyphicon-user" title="#{msgs.programaAsociar}" >
 										<f:setPropertyActionListener target="#{programaBean.programa}" value="#{programa}"/>
 										<f:setPropertyActionListener target="#{programaAuxBean.programa}" value="#{programa}"/>
 										<f:actionListener binding="#{programaBean.obtenerUsuariosHab()}" />
@@ -381,5 +403,52 @@
 		<br/>
 
 	</h:body>
+    <style>
+         .popover__title {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 24px;
+            line-height: 36px;
+            text-decoration: none;
+            color: rgb(228, 68, 68);
+            text-align: center;
+            padding: 15px 0;
+          }
 
+          .popover__wrapper {
+              display: inline-block;
+              width: 100%;
+          }
+          .popover__content {
+              opacity: 0;
+              visibility: hidden;
+              position: absolute;
+              transform: translate(0,10px);
+              background-color: #337ab7;
+              color: white;
+              padding: 1.5rem;
+              box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+              width: auto;
+          }
+          .popover__content:before {
+              position: absolute;
+              z-index: -1;
+              content: '';
+              right: calc(50% - 10px);
+              top: -8px;
+              border-style: solid;
+              border-width: 0 10px 10px 10px;
+              border-color: transparent transparent #337ab7 transparent;
+              transition-duration: 0.3s;
+              transition-property: transform;
+          }
+          .popover__wrapper:hover .popover__content {
+              z-index: 1;
+              opacity: 1;
+              visibility: visible;
+              transition: all 0.5s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+          }
+          .popover__message {
+            text-align: left;
+          }
+    </style>
 </html>

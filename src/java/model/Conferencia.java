@@ -53,7 +53,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Conferencia.findByModeratorurl", query = "SELECT c FROM Conferencia c WHERE c.moderatorurl = :moderatorurl"),
     @NamedQuery(name = "Conferencia.findByChecksumattendee", query = "SELECT c FROM Conferencia c WHERE c.checksumattendee = :checksumattendee"),
     @NamedQuery(name = "Conferencia.findByAttendeeurl", query = "SELECT c FROM Conferencia c WHERE c.attendeeurl = :attendeeurl"),
-    @NamedQuery(name = "Conferencia.findByRecordingurl", query = "SELECT c FROM Conferencia c WHERE c.recordingurl = :recordingurl")})
+    @NamedQuery(name = "Conferencia.findByRecordingurl", query = "SELECT c FROM Conferencia c WHERE c.recordingurl = :recordingurl"), 
+    @NamedQuery(name = "Conferencia.findByIdUsuario", query = "SELECT c FROM Conferencia c WHERE c.idUsuario = :idUsuario")})
 public class Conferencia implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -109,6 +110,9 @@ public class Conferencia implements Serializable {
     @JoinColumn(name = "id_usuario_x_programa", referencedColumnName = "id_usuario_x_programa")
     @ManyToOne(optional = false)
     private UsuarioXPrograma idUsuarioXPrograma;
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
+    @ManyToOne(optional = false)
+    private Usuario idUsuario;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idConferencia")
     private List<Documento> documentoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idConferencia")
@@ -295,6 +299,14 @@ public class Conferencia implements Serializable {
 
     public void setIdUsuarioXPrograma(UsuarioXPrograma idUsuarioXPrograma) {
         this.idUsuarioXPrograma = idUsuarioXPrograma;
+    }
+    
+    public Usuario getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Usuario idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     @XmlTransient

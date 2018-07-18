@@ -1,9 +1,11 @@
 package bean;
 
 import dao.ConferenciaDao;
+import dao.ConfiguracionRedDao;
 import dao.EstadoConferenciaDao;
 import dao.UsuarioXProgramaDao;
 import dao.UsuarioDao;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,11 +16,14 @@ import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import model.Conferencia;
+import model.ConfiguracionRed;
 import model.EstadoConferencia;
 import model.Programa;
 import model.Usuario;
+import utils.BbbCalls;
 
 @ViewScoped
 @ManagedBean
@@ -64,6 +69,10 @@ public class ConferenciaBean implements Serializable {
 
     public String getFechaStr(Conferencia conferencia) {
         return new SimpleDateFormat("dd/MM/yyyy").format(conferencia.getFechaPonencia()) + (conferencia.getHoraPonencia() == null ? "" : " " + conferencia.getHoraPonencia());
+    }
+    
+    public String getFechaCreStr(Conferencia conferencia) {
+        return new SimpleDateFormat("dd/MM/yyyy").format(conferencia.getFechaCreacion()) + (conferencia.getHoraCreacion()== null ? "" : " " + conferencia.getHoraCreacion());
     }
 
     public void setFechaDate(Date fecha) {
@@ -116,6 +125,9 @@ public class ConferenciaBean implements Serializable {
     }
 
     public List<Conferencia> getLista() {
+        //ConferenciaDao cb = new ConferenciaDao();
+        //UsuarioDao ud = new UsuarioDao();
+        //this.lista = cb.obtenerTodosXUsuario(ud.obtenerUsuario(13));
         return lista;
     }
 
@@ -225,7 +237,7 @@ public class ConferenciaBean implements Serializable {
             UsuarioXProgramaDao daoUsuarioXPrograma = new UsuarioXProgramaDao();
             try {
                 idUsuarioXProgramaAux = daoUsuarioXPrograma.obtenerUXPxUsuarioPrograma(idUsuarioAux, idProgramaAux).getIdUsuarioXPrograma();
-                daoConferencia.insertar(conferencia, 1, idUsuarioXProgramaAux);
+                daoConferencia.insertar(conferencia, 1, idUsuarioXProgramaAux, idUsuarioAux);
                 mensajeGlobalInformativo(resourceBundle.getString("Registro") + " '" + conferencia.getNombre() + "' " + resourceBundle.getString("InsertExito"));
             } catch (Exception ex) {
                 mensajeGlobalError(resourceBundle.getString("ErrorIns") + " '" + conferencia.getNombre() + "'; " + resourceBundle.getString("ErrorIns2"));
@@ -264,7 +276,14 @@ public class ConferenciaBean implements Serializable {
 
     public void obtenerTodos() {
         ConferenciaDao daoConferencia = new ConferenciaDao();
-        lista = daoConferencia.obtenerTodos();
+        UsuarioDao ud = new UsuarioDao();
+        Usuario usuario= ud.obtenerUsuario(sesionUBean.sesionUsuario);
+        if(usuario.getIdRol().getIdRol() == 1){
+            lista = daoConferencia.obtenerTodos();
+        }else{
+            lista = daoConferencia.obtenerTodosXUsuario(usuario);
+        }
+        
 
         EstadoConferenciaDao daoEstadoConferencia = new EstadoConferenciaDao();
         listaEstadosConf = daoEstadoConferencia.obtenerTodos();
@@ -274,6 +293,59 @@ public class ConferenciaBean implements Serializable {
 
         conferencia = new Conferencia();
         fecha = "";
+    }
+    
+    public void terminarVC() {
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("utils.mis_mensajes", FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        String alertMsg;
+        ConferenciaDao daoConferencia = new ConferenciaDao();
+        if (BbbCalls.EnEmision(String.valueOf(conferencia.getIdConferencia()))) {
+            if (BbbCalls.terminarVC(conferencia)) {
+                alertMsg=resourceBundle.getString("indexHeaderConferencia")+": '" +conferencia.getNombre() + "' "+resourceBundle.getString("ModerFinalizada");
+                
+                if (conferencia.getGrabacion()) {
+                    daoConferencia.actualizarEstadoConferencia(conferencia, 3);
+                } else {
+                    daoConferencia.actualizarEstadoConferencia(conferencia, 3);
+                }
+            } else {
+                alertMsg=resourceBundle.getString("ModerNoSePudoFin")+": '" +conferencia.getNombre();
+                daoConferencia.actualizarEstadoConferencia(conferencia, 3);
+            }
+            mensajeGlobalInformativo(alertMsg);
+        } else {
+            if(conferencia.getIdEstadoConferencia().getIdEstadoConferencia()>1){
+                alertMsg=resourceBundle.getString("indexHeaderConferencia")+": '" +conferencia.getNombre() + "' "+resourceBundle.getString("ModerYaFinalizo");
+                mensajeGlobalInformativo(alertMsg);
+                daoConferencia.actualizarEstadoConferencia(conferencia, 3);
+            }else{
+                alertMsg=resourceBundle.getString("indexHeaderConferencia")+": '" +conferencia.getNombre() + "' "+resourceBundle.getString("ModerAunNo");
+                mensajeGlobalAdvertencia(alertMsg);
+            }
+        }
+
+    }
+    
+     public void redirect() throws IOException {
+       ResourceBundle resourceBundle = ResourceBundle.getBundle("utils.mis_mensajes", FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        String alertMsg;
+		 ConfiguracionRedDao daoCred = new ConfiguracionRedDao();
+		 ConfiguracionRed configuracion=daoCred.obtener();
+		 if(configuracion.getDocumento()==null){
+			 alertMsg=resourceBundle.getString("errorPPTPorDefecto");
+          mensajeGlobalInformativo(alertMsg);
+		 }else{
+			iniciarModerador();    
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.redirect(url);
+		 
+		 }
+    }
+     
+     public void iniciarModerador() {
+        url = BbbCalls.iniciarVC(usuarioBbb, conferencia);
+        ConferenciaDao daoConferencia = new ConferenciaDao();
+        daoConferencia.actualizarEstadoConferencia(conferencia, 2);
     }
 
     public void mensajeGlobalInformativo(String mensaje) {

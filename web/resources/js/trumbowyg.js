@@ -62,7 +62,19 @@ jQuery.trumbowyg = {
             description: 'Description',
             title: 'Title',
             text: 'Text',
-            target: 'Target'
+            target: 'Target',
+            
+            nombrePrograma: 'Program name',
+            nombreConferencia: 'Conference name',
+            ponentes: 'Speaker',
+            moderadores: 'Moderators',
+            duracion: 'Duration',
+            fechaPonencia: 'Conference date',
+            horaPonencia: 'Conference time',
+            enlaceModerador: 'Moderator Link',
+            enlaceConferencia: 'Conference Link',
+            contraseniaConferencia: 'Conference Pass',
+            tags: 'Smart Labels'
         }
     },
 

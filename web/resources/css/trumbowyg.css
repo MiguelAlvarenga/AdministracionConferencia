@@ -517,6 +517,7 @@ body.trumbowyg-body-fullscreen {
 .trumbowyg-dark .trumbowyg-dropdown {
   border-color: #222;
   background: #333;
+  z-index:4000;
   box-shadow: rgba(0, 0, 0, 0.3) 0 2px 3px; }
   .trumbowyg-dark .trumbowyg-dropdown button {
     background: #333;

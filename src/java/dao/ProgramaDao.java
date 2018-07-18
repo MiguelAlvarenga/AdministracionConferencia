@@ -98,6 +98,21 @@ public class ProgramaDao {
 
 		return lista;
 	}
+        
+        public List<Programa> obtenerTodosXUsuario(Usuario usuario) {
+		em = emf.createEntityManager();
+		em.getTransaction().begin();
+
+		Query query = em.createNamedQuery("Programa.findByUsuario", Programa.class);
+                query.setParameter("idUsuario", usuario);
+		List<Programa> lista = query.getResultList();
+
+		em.getTransaction().commit();
+		em.close();
+		emf.close();
+
+		return lista;
+	}
 
 	public Programa getProgramaXId(int idPrograma) {
 
