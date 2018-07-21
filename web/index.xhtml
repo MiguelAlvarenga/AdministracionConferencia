@@ -26,7 +26,7 @@
         <h:outputStylesheet library="css" name="pagination.css" />
     </h:head>
 
-    <h:body>
+    <h:body onload="cambiarBanderaInicial()">
 
         <ui:composition template="template/plantillaPrincipal.xhtml">
             <ui:define name="content">
@@ -41,7 +41,24 @@
 
 
                     <script type="text/javascript">
-
+                        var bandera = 0;
+                        function cambiarBanderaInicial(){
+                            var estado = #{indexBean.status};
+                            if(estado === 1){
+                                    if(bandera === 0){
+                                        alert('Su conferencia aún no ha empezado');
+                                        bandera = 2;
+                                    }
+                                 }else{
+                                     if(estado === 2){
+                                         if(bandera === 0){
+                                             alert('Su conferencia ya ha comenzado');
+                                             bandera = 3;
+                                         }
+                                         
+                                     }
+                                }
+                        }
                         function automatico() {
                             $(".reload").trigger("click");
                         }
@@ -49,7 +66,15 @@
 
 
                         window.setInterval(function () {
-                            automatico()
+                            var estado = #{indexBean.status};
+                            if(estado === 2){
+                                         if(bandera === 2){
+                                             alert('Su conferencia ya ha comenzado');
+                                             bandera = 3;
+                                         }
+                                         
+                                     }
+                            automatico();
                         }, 60 * 1000);
                     </script>
 

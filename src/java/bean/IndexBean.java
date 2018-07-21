@@ -38,7 +38,7 @@ public class IndexBean implements Serializable {
     private String id;
     private String check;
     private String err;
-
+    private int status;
     private String tituloModal;
     private boolean nuevo = true;
 
@@ -55,6 +55,8 @@ public class IndexBean implements Serializable {
     public void refresh() {
         if (id != null) {
             obtenerTodos(id, check);
+            ConferenciaDao conferenciaDao = new ConferenciaDao();
+            status = conferenciaDao.getConferenciaXId(Integer.parseInt(id)).getIdEstadoConferencia().getIdEstadoConferencia();
         } else {
             obtenerTodos();
         }
@@ -116,7 +118,31 @@ public class IndexBean implements Serializable {
     public void setPasswordBbb(String passwordBbb) {
         this.passwordBbb = passwordBbb;
     }
+    
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCheck() {
+        return check;
+    }
+
+    public void setCheck(String check) {
+        this.check = check;
+    }
+    
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+    
     public List<Programa> getListaProgramasxUsuario(int idUsuario) {
         UsuarioXProgramaDao daoUsuarioXPrograma = new UsuarioXProgramaDao();
         listaProgramasxUsuario = daoUsuarioXPrograma.obtenerSoloProgramasxUsuario(idUsuario);
