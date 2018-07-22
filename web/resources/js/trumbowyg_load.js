@@ -11,7 +11,8 @@ $(document).ready(function () {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
                         pasteHtmlAtCaret('');
-                        pasteHtmlAtCaret('<span class="textoImportante">{NombrePrograma}</span>'); 
+                        document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('<span class="textoImportante">{NombrePrograma}</span>&nbsp;'); 
                     },
                     ico: 'uploadc'
                 },
@@ -19,7 +20,8 @@ $(document).ready(function () {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
                         pasteHtmlAtCaret('');
-                        pasteHtmlAtCaret('<span class="textoImportante">{NombreConferencia}</span>'); 
+                        document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('<span class="textoImportante">{NombreConferencia}</span>&nbsp;'); 
                     },
                     ico: 'uploadb'
                 },
@@ -27,7 +29,7 @@ $(document).ready(function () {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
                         pasteHtmlAtCaret('');
-                        pasteHtmlAtCaret('<span class="textoImportante">{Ponentes}</span>'); 
+                        pasteHtmlAtCaret('<span class="textoImportante">{Ponentes}</span>&nbsp;'); 
                     },
                     ico: 'uploadd'
                 },
@@ -35,7 +37,8 @@ $(document).ready(function () {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
                         pasteHtmlAtCaret('');
-                        pasteHtmlAtCaret('<span class="textoImportante">{Moderadores}</span>'); 
+                        document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('<span class="textoImportante">{Moderadores}</span>&nbsp;'); 
                     },
                     ico: 'uploade'
                 },
@@ -43,7 +46,8 @@ $(document).ready(function () {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
                         pasteHtmlAtCaret('');
-                        pasteHtmlAtCaret('<span class="textoImportante">{Duracion}</span>'); 
+                        document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('<span class="textoImportante">{Duracion}</span>&nbsp;'); 
                     },
                     ico: 'uploadf'
                 },
@@ -51,7 +55,7 @@ $(document).ready(function () {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
                         pasteHtmlAtCaret('');
-                        pasteHtmlAtCaret('<span class="textoImportante">{FechaPonencia}</span>'); 
+                        pasteHtmlAtCaret('<span class="textoImportante">{FechaPonencia}</span>&nbsp;'); 
                     },
                     ico: 'uploadg'
                 },
@@ -59,7 +63,8 @@ $(document).ready(function () {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
                         pasteHtmlAtCaret('');
-                        pasteHtmlAtCaret('<span class="textoImportante">{HoraPonencia}</span>'); 
+                        document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('<span class="textoImportante">{HoraPonencia}</span>&nbsp;'); 
                     },
                     ico: 'uploadh'
                 },
@@ -67,7 +72,8 @@ $(document).ready(function () {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
                         pasteHtmlAtCaret('');
-                        pasteHtmlAtCaret('<span class="textoImportante">{EnlaceModerador}</span>'); 
+                        document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('<span class="textoImportante">{EnlaceModerador}</span>&nbsp;'); 
                     },
                     ico: 'uploadi'
                 },
@@ -75,7 +81,8 @@ $(document).ready(function () {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
                         pasteHtmlAtCaret('');
-                        pasteHtmlAtCaret('<span class="textoImportante">{EnlaceConferencia}</span>'); 
+                        document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('<span class="textoImportante">{EnlaceConferencia}</span>&nbsp;'); 
                     },
                     ico: 'uploadi'
                 },
@@ -83,7 +90,8 @@ $(document).ready(function () {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
                         pasteHtmlAtCaret('');
-                        pasteHtmlAtCaret('<span class="textoImportante">{ContraseñaConferenciaPrivada}</span>'); 
+                        document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('<span class="textoImportante">{ContraseñaConferenciaPrivada}</span>&nbsp;'); 
                     },
                     ico: 'uploadj'
                 },

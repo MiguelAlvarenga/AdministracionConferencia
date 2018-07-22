@@ -73,7 +73,7 @@ jQuery.trumbowyg = {
             horaPonencia: 'Hora conferencia',
             enlaceModerador: 'Link moderador',
             enlaceConferencia: 'Link conferencia',
-            contraseniaConferencia: 'Contraseña conferencia',
+            contraseniaConferencia: 'Contraseña conf.',
             tags: 'Etiquetas'
         }
     },
