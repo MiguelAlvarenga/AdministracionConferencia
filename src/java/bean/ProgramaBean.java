@@ -11,13 +11,12 @@ import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import model.Programa;
 import model.Usuario;
 import model.UsuarioXPrograma;
 
-@SessionScoped
-//@ViewScoped
+@ViewScoped
 @ManagedBean
 public class ProgramaBean implements Serializable {
 
@@ -276,8 +275,11 @@ public class ProgramaBean implements Serializable {
         
         ProgramaDao daoPrograma = new ProgramaDao();
         UsuarioDao ud = new UsuarioDao();
-        Usuario usuarioProgramas = ud.obtenerUsuario(sesionUBean.sesionUsuario);
-        if(usuarioProgramas.getIdRol().getIdRol() == 1){
+        int RolUsuario;
+        Usuario usuarioProgramas = new Usuario();
+        usuarioProgramas = ud.obtenerUsuario(sesionUBean.sesionUsuario);
+        RolUsuario = usuarioProgramas.getIdRol().getIdRol();
+        if(RolUsuario == 1){
             lista = daoPrograma.obtenerTodos();
         }else{
             lista = daoPrograma.obtenerTodosXUsuario(usuarioProgramas);

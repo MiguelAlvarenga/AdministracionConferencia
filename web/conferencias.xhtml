@@ -186,11 +186,11 @@
                                         <f:ajax render=":frmModalEliminar"/>
                                     </h:commandLink>
                                     &nbsp; 
-                                    <h:commandLink id="btnIniciar" class="btn btn-primary" value="#{msgs.ModerIniciar}" onclick="$('#modalDatosP').modal('show');">
+                                    <h:commandLink rendered="#{conferencia.idEstadoConferencia.idEstadoConferencia eq 1}" id="btnIniciar" class="btn btn-primary" value="#{msgs.ModerIniciar}" onclick="$('#modalDatosP').modal('show');">
                                         <f:setPropertyActionListener target="#{conferenciaBean.conferencia}" value="#{conferencia}"/>
                                         <f:ajax render=":frmModalDatosP"/>
                                     </h:commandLink>
-                                    <h:commandLink id="btnDetener" class="btn btn-danger" value="#{msgs.ModerDetener}" onclick="$('#modalFinalizar').modal('show');">
+                                    <h:commandLink rendered="#{conferencia.idEstadoConferencia.idEstadoConferencia eq 2}" id="btnDetener" class="btn btn-danger" value="#{msgs.ModerDetener}" onclick="$('#modalFinalizar').modal('show');">
                                         <f:setPropertyActionListener target="#{conferenciaBean.conferencia}" value="#{conferencia}"/>
                                         <f:ajax render=":frmModalFinalizar"/>
                                     </h:commandLink>
