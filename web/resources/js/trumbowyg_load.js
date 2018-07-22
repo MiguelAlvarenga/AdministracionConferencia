@@ -10,6 +10,7 @@ $(document).ready(function () {
                 nombrePrograma: {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('');
                         pasteHtmlAtCaret('<span class="textoImportante">{NombrePrograma}</span>'); 
                     },
                     ico: 'uploadc'
@@ -17,6 +18,7 @@ $(document).ready(function () {
                 nombreConferencia: {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('');
                         pasteHtmlAtCaret('<span class="textoImportante">{NombreConferencia}</span>'); 
                     },
                     ico: 'uploadb'
@@ -24,6 +26,7 @@ $(document).ready(function () {
                 ponentes: {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('');
                         pasteHtmlAtCaret('<span class="textoImportante">{Ponentes}</span>'); 
                     },
                     ico: 'uploadd'
@@ -31,6 +34,7 @@ $(document).ready(function () {
                 moderadores: {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('');
                         pasteHtmlAtCaret('<span class="textoImportante">{Moderadores}</span>'); 
                     },
                     ico: 'uploade'
@@ -38,6 +42,7 @@ $(document).ready(function () {
                 duracion: {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('');
                         pasteHtmlAtCaret('<span class="textoImportante">{Duracion}</span>'); 
                     },
                     ico: 'uploadf'
@@ -45,6 +50,7 @@ $(document).ready(function () {
                 fechaPonencia: {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('');
                         pasteHtmlAtCaret('<span class="textoImportante">{FechaPonencia}</span>'); 
                     },
                     ico: 'uploadg'
@@ -52,6 +58,7 @@ $(document).ready(function () {
                 horaPonencia: {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('');
                         pasteHtmlAtCaret('<span class="textoImportante">{HoraPonencia}</span>'); 
                     },
                     ico: 'uploadh'
@@ -59,6 +66,7 @@ $(document).ready(function () {
                 enlaceModerador: {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('');
                         pasteHtmlAtCaret('<span class="textoImportante">{EnlaceModerador}</span>'); 
                     },
                     ico: 'uploadi'
@@ -66,6 +74,7 @@ $(document).ready(function () {
                 enlaceConferencia: {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('');
                         pasteHtmlAtCaret('<span class="textoImportante">{EnlaceConferencia}</span>'); 
                     },
                     ico: 'uploadi'
@@ -73,6 +82,7 @@ $(document).ready(function () {
                 contraseniaConferencia: {
                     fn: function() {
                         document.getElementById('rtfContenido').focus(); 
+                        pasteHtmlAtCaret('');
                         pasteHtmlAtCaret('<span class="textoImportante">{ContraseñaConferenciaPrivada}</span>'); 
                     },
                     ico: 'uploadj'
