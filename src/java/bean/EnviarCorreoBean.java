@@ -118,11 +118,11 @@ public class EnviarCorreoBean implements Serializable {
 		List<String> correosDestino = new ArrayList<String>();
 		List<String> correosCC = new ArrayList<String>();
 
-		String[] listaCorreos = txtCorreoPara.split(";");
+		String[] listaCorreos = txtCorreoPara.split(",");
 		for (int i = 0; i < listaCorreos.length; i++) {
 			correosDestino.add(listaCorreos[i].trim());
 		}
-                listaCorreos = txtCorreoCC.split(";");
+                listaCorreos = txtCorreoCC.split(",");
                 if(!txtCorreoCC.isEmpty() || txtCorreoCC!=null){
                     for (int i = 0; i < listaCorreos.length; i++) {
                             correosCC.add(listaCorreos[i].trim());
