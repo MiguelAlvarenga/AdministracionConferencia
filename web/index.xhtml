@@ -169,7 +169,7 @@
                                     
                                     <h:column>
                                         <f:facet name="header">-</f:facet>
-                                        <h:commandLink class="btn btn-xs btn-success" value="#{msgs.indexBtnReproducir}"  title="#{msgs.indexBtnReproducirTitle}" action="#{indexBean.redirectGrabacion()}">
+                                        <h:commandLink class="btn btn-xs btn-success" value="#{msgs.indexBtnReproducir}"  title="#{msgs.indexBtnReproducirTitle}" action="#{indexBean.redirectGrabacion()}" target="_blank">
                                             <f:setPropertyActionListener target="#{indexBean.grabacion}" value="#{grabacion}"/>
                                         </h:commandLink>
                                     </h:column>
