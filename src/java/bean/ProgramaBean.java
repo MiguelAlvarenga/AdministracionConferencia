@@ -276,13 +276,14 @@ public class ProgramaBean implements Serializable {
         ProgramaDao daoPrograma = new ProgramaDao();
         UsuarioDao ud = new UsuarioDao();
         int RolUsuario;
-        Usuario usuarioProgramas = new Usuario();
-        usuarioProgramas = ud.obtenerUsuario(sesionUBean.sesionUsuario);
-        RolUsuario = usuarioProgramas.getIdRol().getIdRol();
+        FacesContext fc = FacesContext.getCurrentInstance();
+        sesionUBean s = fc.getApplication().evaluateExpressionGet(fc, "#{sesionUBean}", sesionUBean.class);
+        Usuario usuarioAux = s.getUsuario();
+        RolUsuario = usuarioAux.getIdRol().getIdRol();
         if(RolUsuario == 1){
             lista = daoPrograma.obtenerTodos();
         }else{
-            lista = daoPrograma.obtenerTodosXUsuario(usuarioProgramas);
+            lista = daoPrograma.obtenerTodosXUsuario(usuarioAux);
         }
         UsuarioDao daoUsuario = new UsuarioDao();
         listaUsuarios = daoUsuario.obtenerTodos();

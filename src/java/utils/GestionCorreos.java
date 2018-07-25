@@ -54,7 +54,7 @@ public class GestionCorreos {
                 System.out.println(correosDestino.get(i));
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(correosDestino.get(i)));
             }
-            if (correosCC != null) {
+            if (!correosCC.isEmpty()) {
                 for (int i = 0; i < correosCC.size(); i++) {
                     System.out.println("a" + correosCC.size());
                     System.out.println(correosCC.get(i));

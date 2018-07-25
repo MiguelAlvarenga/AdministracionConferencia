@@ -122,8 +122,9 @@ public class EnviarCorreoBean implements Serializable {
 		for (int i = 0; i < listaCorreos.length; i++) {
 			correosDestino.add(listaCorreos[i].trim());
 		}
-                listaCorreos = txtCorreoCC.split(",");
-                if(!txtCorreoCC.isEmpty() || txtCorreoCC!=null){
+                
+                if(txtCorreoCC !=null){
+                    listaCorreos = txtCorreoCC.split(",");
                     for (int i = 0; i < listaCorreos.length; i++) {
                             correosCC.add(listaCorreos[i].trim());
                     }

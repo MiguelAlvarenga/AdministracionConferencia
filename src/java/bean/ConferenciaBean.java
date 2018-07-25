@@ -276,8 +276,9 @@ public class ConferenciaBean implements Serializable {
 
     public void obtenerTodos() {
         ConferenciaDao daoConferencia = new ConferenciaDao();
-        UsuarioDao ud = new UsuarioDao();
-        Usuario usuario= ud.obtenerUsuario(sesionUBean.sesionUsuario);
+        FacesContext fc = FacesContext.getCurrentInstance();
+       sesionUBean s = fc.getApplication().evaluateExpressionGet(fc, "#{sesionUBean}", sesionUBean.class);
+        Usuario usuario = s.getUsuario();
         if(usuario.getIdRol().getIdRol() == 1){
             lista = daoConferencia.obtenerTodos();
         }else{

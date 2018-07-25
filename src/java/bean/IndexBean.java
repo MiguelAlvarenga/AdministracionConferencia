@@ -18,6 +18,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import model.Conferencia;
 import model.Programa;
+import model.Usuario;
 import utils.BbbCalls;
 
 @ViewScoped
@@ -217,12 +218,12 @@ public class IndexBean implements Serializable {
     private void obtenerGrabaciones() {
         FacesContext fc = FacesContext.getCurrentInstance();
         sesionUBean s = fc.getApplication().evaluateExpressionGet(fc, "#{sesionUBean}", sesionUBean.class);
-        
+        Usuario userAux = s.getUsuario();
         ConferenciaDao daoConferencia = new ConferenciaDao();
-        if(sesionUBean.sesionUsuario == 0){
+        if(userAux.getIdUsuario() == null){
             listaGrabaciones = daoConferencia.obtenerGrabaciones();
         }else{
-            if(s.getUsuario().getIdRol().getIdRol() == 1){
+            if(userAux.getIdRol().getIdRol() == 1){
                 listaGrabaciones = daoConferencia.obtenerTodasGrabaciones();
             }else{
                 listaGrabaciones = daoConferencia.obtenerGrabacionesXUsuario(s.getUsuario());
