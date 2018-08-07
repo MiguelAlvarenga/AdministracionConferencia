@@ -220,7 +220,7 @@ public class IndexBean implements Serializable {
         sesionUBean s = fc.getApplication().evaluateExpressionGet(fc, "#{sesionUBean}", sesionUBean.class);
         Usuario userAux = s.getUsuario();
         ConferenciaDao daoConferencia = new ConferenciaDao();
-        if(userAux.getIdUsuario() == null){
+        if(userAux == null){
             listaGrabaciones = daoConferencia.obtenerGrabaciones();
         }else{
             if(userAux.getIdRol().getIdRol() == 1){
