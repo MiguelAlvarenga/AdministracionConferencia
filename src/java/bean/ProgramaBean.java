@@ -149,9 +149,10 @@ public class ProgramaBean implements Serializable {
         Calendar fechaActual = Calendar.getInstance();
         programa.setFechaCreacion(fechaActual.getTime());
         ProgramaDao daoPrograma = new ProgramaDao();
+        String auxNom = daoPrograma.valNombre(programa.getNombre()).getNombre();
 
         if (nuevo) {
-            if (programa.getNombre() == null) {
+            if (programa.getNombre() == null || programa.getNombre() == auxNom) {
                 mensajeGlobalError(resourceBundle.getString("ErrorIns") + " '" + programa.getNombre() + "'; " + resourceBundle.getString("ErrorIns2"));
                 return;
             }
