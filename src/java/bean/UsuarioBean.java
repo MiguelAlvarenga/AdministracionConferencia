@@ -257,8 +257,13 @@ public class UsuarioBean implements Serializable {
     public void eliminar() {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("utils.mis_mensajes", FacesContext.getCurrentInstance().getViewRoot().getLocale());
         UsuarioXProgramaDao dao = new UsuarioXProgramaDao();
-
+        int programasAsociados = dao.obtenerTodosProgramasxUsuario(usuario.getIdUsuario()).size();
+        
         if (eliminarReg) {
+            if(programasAsociados != 0){
+                mensajeGlobalError(resourceBundle.getString("ErrorDlt") + " '" + usuario.getNombre() + "'; " + resourceBundle.getString("ErrorIns4"));
+                return;
+            }
             try {
                 UsuarioDao daoUsuario = new UsuarioDao();
                 daoUsuario.eliminar(usuario.getIdUsuario());
@@ -269,6 +274,7 @@ public class UsuarioBean implements Serializable {
             }
 
             limpiar();
+            
         } else {
             idUxp.setActivo(false);
             dao.actualizar(idUxp);
