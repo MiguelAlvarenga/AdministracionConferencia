@@ -175,8 +175,8 @@
                                     </h:column>
                                     <h:column>
                                         <f:facet name="header">-</f:facet>
-                                        <h:commandLink class="btn btn-xs btn-primary" value="Descargar"  title="#{msgs.indexBtnReproducirTitle}" action="#{indexBean.redirectGrabacion()}">
-                                            <f:setPropertyActionListener target="#{indexBean.grabacion}" value="#{grabacion}"/>
+                                        <h:commandLink target="_blank" class="btn btn-xs btn-primary" value="Descargar"  title="#{msgs.indexBtnReproducirTitle}" action="#{indexBean.descarga()}">
+                                            <f:setPropertyActionListener target="#{indexBean.grabacion}" value="#{grabacion}"/> 
                                         </h:commandLink>
                                     </h:column>
                                     <h:column>							 

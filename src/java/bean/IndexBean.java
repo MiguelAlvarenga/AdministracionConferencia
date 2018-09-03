@@ -20,7 +20,10 @@ import model.Conferencia;
 import model.Programa;
 import model.Usuario;
 import utils.BbbCalls;
-
+import java.io.*;
+import java.util.zip.*;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 @ViewScoped
 @ManagedBean
 public class IndexBean implements Serializable {
@@ -275,5 +278,63 @@ public class IndexBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, mensaje, ""));
     }
+    public static void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parrentDirectoryName) throws Exception {
+        if (fileToZip == null || !fileToZip.exists()) {
+            return;
+        }
+        String zipEntryName = fileToZip.getName();
+        if (parrentDirectoryName!=null && !parrentDirectoryName.isEmpty()) {
+            zipEntryName = parrentDirectoryName + "/" + fileToZip.getName();
+        }
 
+        if (fileToZip.isDirectory()) {
+            System.out.println("+" + zipEntryName);
+            for (File file : fileToZip.listFiles()) {
+                addDirToZipArchive(zos, file, zipEntryName);
+            }
+        } else {
+            System.out.println("   " + zipEntryName);
+            byte[] buffer = new byte[1024];
+            FileInputStream fis = new FileInputStream(fileToZip);
+            zos.putNextEntry(new ZipEntry(zipEntryName));
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                zos.write(buffer, 0, length);
+            }
+            zos.closeEntry();
+            fis.close();
+        }
+    }
+    public void descarga() throws FileNotFoundException, Exception{
+    HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+    //aqui es donde se dice los parametros de donde estara y el nombre del comprimido
+    FileOutputStream fos = new FileOutputStream("C:\\Users\\Mario\\Desktop\\archivo.zip");
+    ZipOutputStream zos = new ZipOutputStream(fos);
+    //aqui es donde se dice la direccion de donde estan los archivos y subfolders a comprimir
+    addDirToZipArchive(zos, new File("C:\\Users\\Mario\\Desktop\\preuba\\"), null);
+    zos.flush();
+    fos.flush();
+    zos.close();
+    fos.close();
+//aqui comienza la descarga
+
+    File file = new File("C:/Users/Mario/Desktop/archivo.zip");
+    if(!file.exists()){
+        System.out.println("file not found");
+    }
+    response.setContentType("APPLICATION/OCTET-STREAM");
+    response.setHeader("Content-Disposition","attachment; filename=\"" + "archivo.zip" + "\"");
+
+    OutputStream out = response.getOutputStream();
+    FileInputStream in = new FileInputStream(file);
+    byte[] buffer = new byte[4096];
+    int length;
+    while ((length = in.read(buffer)) > 0){
+       out.write(buffer, 0, length);
+    }
+    in.close();
+    out.flush();
+
+        
+    }
 }
