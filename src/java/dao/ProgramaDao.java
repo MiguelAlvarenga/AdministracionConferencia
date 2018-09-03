@@ -138,27 +138,4 @@ public class ProgramaDao {
 		return p;
 	}
         
-        public Programa valNombre(String nombre) {
-
-		Programa p;
-
-		try {
-			em = emf.createEntityManager();
-			em.getTransaction().begin();
-
-			Query sql = em.createNamedQuery("Programa.findByNombre", Programa.class);
-			sql.setParameter("nombre", nombre);
-			p = (Programa) sql.getSingleResult();
-
-			em.getTransaction().commit();
-			em.close();
-			emf.close();
-		} catch (Exception ex) {
-			em.close();
-			emf.close();
-			throw ex;
-		}
-		return p;
-	}
-        
 }
