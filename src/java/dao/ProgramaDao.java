@@ -138,4 +138,19 @@ public class ProgramaDao {
 		return p;
 	}
         
+        public List<Programa> getProgramaXNombre(String nombre){
+                em = emf.createEntityManager();
+		em.getTransaction().begin();
+
+		Query query = em.createNamedQuery("Programa.findByNombre", Programa.class);
+                query.setParameter("nombre", nombre);
+		List<Programa> lista = query.getResultList();
+
+		em.getTransaction().commit();
+		em.close();
+		emf.close();
+
+		return lista;
+        }
+        
 }

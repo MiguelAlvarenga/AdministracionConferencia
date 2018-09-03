@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Programa.findAll", query = "SELECT p FROM Programa p"),
     @NamedQuery(name = "Programa.findByIdPrograma", query = "SELECT p FROM Programa p WHERE p.idPrograma = :idPrograma"),
-    @NamedQuery(name = "Programa.findByNombre", query = "SELECT p FROM Programa p WHERE p.nombre = :nombre"),
+    @NamedQuery(name = "Programa.findByNombre", query = "SELECT p FROM Programa p WHERE LOWER(p.nombre) = :nombre"),
     @NamedQuery(name = "Programa.findByDescripcion", query = "SELECT p FROM Programa p WHERE p.descripcion = :descripcion"),
     @NamedQuery(name = "Programa.findByFechaCreacion", query = "SELECT p FROM Programa p WHERE p.fechaCreacion = :fechaCreacion"),
     @NamedQuery(name = "Programa.findByActivo", query = "SELECT p FROM Programa p WHERE p.activo = :activo"),
@@ -59,7 +59,7 @@ public class Programa implements Serializable {
     @Basic(optional = false)
     @Column(name = "activo")
     private boolean activo;
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "idPrograma")
+    @OneToMany(cascade = {CascadeType.REMOVE,CascadeType.REMOVE, CascadeType.REMOVE}, mappedBy = "idPrograma")
     private List<UsuarioXPrograma> usuarioXProgramaList;
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)

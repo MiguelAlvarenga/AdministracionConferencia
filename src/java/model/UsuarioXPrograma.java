@@ -49,9 +49,9 @@ public class UsuarioXPrograma implements Serializable {
     @JoinColumn(name = "id_responsable", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
     private Usuario idResponsable;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuarioXPrograma")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "idUsuarioXPrograma")
     private List<BitacoraPrograma> bitacoraProgramaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuarioXPrograma")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "idUsuarioXPrograma")
     private List<Conferencia> conferenciaList;
 
     public UsuarioXPrograma() {
