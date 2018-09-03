@@ -84,7 +84,7 @@ public class ProgramaDao {
 		try {
 			em.getTransaction().begin();
 
-			TypedQuery<Programa> query = em.createQuery("SELECT p FROM Programa p WHERE p.idPrograma >= 1 AND p.activo = 'true' ORDER BY p.idPrograma DESC", Programa.class);
+			TypedQuery<Programa> query = em.createQuery("SELECT p FROM Programa p WHERE p.idPrograma >= 1 ORDER BY p.idPrograma DESC", Programa.class);
 			lista = query.getResultList();
 
 			em.getTransaction().commit();
