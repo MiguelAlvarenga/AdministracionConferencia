@@ -158,7 +158,6 @@ public class ProgramaDao {
 			emf.close();
 			throw ex;
 		}
-
 		return p;
 	}
         
