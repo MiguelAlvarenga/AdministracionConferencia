@@ -1,5 +1,6 @@
 package bean;
 
+import dao.ProgramaDao;
 import dao.RolDao;
 import dao.UsuarioDao;
 import dao.UsuarioXProgramaDao;
@@ -257,10 +258,16 @@ public class UsuarioBean implements Serializable {
     public void eliminar() {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("utils.mis_mensajes", FacesContext.getCurrentInstance().getViewRoot().getLocale());
         UsuarioXProgramaDao dao = new UsuarioXProgramaDao();
+        ProgramaDao prog = new ProgramaDao();
         int programasAsociados = dao.obtenerTodosProgramasxUsuario(usuario.getIdUsuario()).size();
+        int programasCreados = prog.obtenerTodosXUsuario(usuario).size();
         
         if (eliminarReg) {
-            if(programasAsociados != 0){
+            if(programasAsociados != 0 ){
+                mensajeGlobalError(resourceBundle.getString("ErrorDlt") + " '" + usuario.getNombre() + "'; " + resourceBundle.getString("ErrorIns4"));
+                return;
+            }
+            if(programasCreados != 0 ){
                 mensajeGlobalError(resourceBundle.getString("ErrorDlt") + " '" + usuario.getNombre() + "'; " + resourceBundle.getString("ErrorIns4"));
                 return;
             }
