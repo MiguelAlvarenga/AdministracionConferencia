@@ -315,6 +315,11 @@ public class IndexBean implements Serializable {
     public void descarga() throws FileNotFoundException, Exception{
     HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
     //aqui es donde se dice los parametros de donde estara y el nombre del comprimido
+    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+    HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+    String bbburl= grabacion.getRecordingurl();
+    //aqui esta el meetingId, es de contar caracteres
+    String meetingId = bbburl.substring(72,129);
     Path carpeta = FileSystems.getDefault().getPath("C:\\Users\\Mario\\Desktop\\origen\\");
 
     
@@ -343,7 +348,7 @@ public class IndexBean implements Serializable {
         System.out.println("file not found");
     }
     response.setContentType("APPLICATION/OCTET-STREAM");
-    response.setHeader("Content-Disposition","attachment; filename=\"" + "archivo.zip" + "\"");
+    response.setHeader("Content-Disposition","attachment; filename=\"" + grabacion.getNombre() + ".zip" + "\"");
 
     OutputStream out = response.getOutputStream();
     FileInputStream in = new FileInputStream(file);
