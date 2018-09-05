@@ -316,7 +316,6 @@ public class IndexBean implements Serializable {
     HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
     //aqui es donde se dice los parametros de donde estara y el nombre del comprimido
     ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-    HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
     String bbburl= grabacion.getRecordingurl();
     //aqui esta el meetingId, es de contar caracteres
     String meetingId = bbburl.substring(72,129);
@@ -358,9 +357,10 @@ public class IndexBean implements Serializable {
        out.write(buffer, 0, length);
     }
     in.close();
-    out.flush();
     out.close();
-        
+    out.flush();
+
+     FacesContext.getCurrentInstance().responseComplete();
         
     }
 }
