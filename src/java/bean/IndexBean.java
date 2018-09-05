@@ -1,9 +1,15 @@
 package bean;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import dao.ConferenciaDao;
 import dao.UsuarioXProgramaDao;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.Object;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +30,7 @@ import java.io.*;
 import java.util.zip.*;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.FileUtils;
 @ViewScoped
 @ManagedBean
 public class IndexBean implements Serializable {
@@ -308,10 +315,23 @@ public class IndexBean implements Serializable {
     public void descarga() throws FileNotFoundException, Exception{
     HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
     //aqui es donde se dice los parametros de donde estara y el nombre del comprimido
+    Path carpeta = FileSystems.getDefault().getPath("C:\\Users\\Mario\\Desktop\\origen\\");
+
+    
+        File source = new File("C:\\Users\\Mario\\Desktop\\prueba\\");
+        File source2 = new File("C:\\Users\\Mario\\Desktop\\prueba2\\");
+        File dest = new File("C:\\Users\\Mario\\Desktop\\origen\\");
+        try {
+            FileUtils.copyDirectory(source, dest);
+            FileUtils.copyDirectory(source2, dest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     FileOutputStream fos = new FileOutputStream("C:\\Users\\Mario\\Desktop\\archivo.zip");
     ZipOutputStream zos = new ZipOutputStream(fos);
     //aqui es donde se dice la direccion de donde estan los archivos y subfolders a comprimir
-    addDirToZipArchive(zos, new File("C:\\Users\\Mario\\Desktop\\preuba\\"), null);
+    addDirToZipArchive(zos, new File("C:\\Users\\Mario\\Desktop\\origen\\"), null);
     zos.flush();
     fos.flush();
     zos.close();
@@ -334,7 +354,8 @@ public class IndexBean implements Serializable {
     }
     in.close();
     out.flush();
-
+    out.close();
+        
         
     }
 }
