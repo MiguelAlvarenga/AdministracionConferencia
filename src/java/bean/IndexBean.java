@@ -1,9 +1,15 @@
 package bean;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import dao.ConferenciaDao;
 import dao.UsuarioXProgramaDao;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.Object;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +30,7 @@ import java.io.*;
 import java.util.zip.*;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.FileUtils;
 @ViewScoped
 @ManagedBean
 public class IndexBean implements Serializable {
@@ -308,10 +315,27 @@ public class IndexBean implements Serializable {
     public void descarga() throws FileNotFoundException, Exception{
     HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
     //aqui es donde se dice los parametros de donde estara y el nombre del comprimido
+    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+    String bbburl= grabacion.getRecordingurl();
+    //aqui esta el meetingId, es de contar caracteres
+    String meetingId = bbburl.substring(72,129);
+    Path carpeta = FileSystems.getDefault().getPath("C:\\Users\\Mario\\Desktop\\origen\\");
+
+    
+        File source = new File("C:\\Users\\Mario\\Desktop\\prueba\\");
+        File source2 = new File("C:\\Users\\Mario\\Desktop\\prueba2\\");
+        File dest = new File("C:\\Users\\Mario\\Desktop\\origen\\");
+        try {
+            FileUtils.copyDirectory(source, dest);
+            FileUtils.copyDirectory(source2, dest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     FileOutputStream fos = new FileOutputStream("C:\\Users\\Mario\\Desktop\\archivo.zip");
     ZipOutputStream zos = new ZipOutputStream(fos);
     //aqui es donde se dice la direccion de donde estan los archivos y subfolders a comprimir
-    addDirToZipArchive(zos, new File("C:\\Users\\Mario\\Desktop\\preuba\\"), null);
+    addDirToZipArchive(zos, new File("C:\\Users\\Mario\\Desktop\\origen\\"), null);
     zos.flush();
     fos.flush();
     zos.close();
@@ -323,7 +347,7 @@ public class IndexBean implements Serializable {
         System.out.println("file not found");
     }
     response.setContentType("APPLICATION/OCTET-STREAM");
-    response.setHeader("Content-Disposition","attachment; filename=\"" + "archivo.zip" + "\"");
+    response.setHeader("Content-Disposition","attachment; filename=\"" + grabacion.getNombre() + ".zip" + "\"");
 
     OutputStream out = response.getOutputStream();
     FileInputStream in = new FileInputStream(file);
@@ -333,8 +357,10 @@ public class IndexBean implements Serializable {
        out.write(buffer, 0, length);
     }
     in.close();
+    out.close();
     out.flush();
 
+     FacesContext.getCurrentInstance().responseComplete();
         
     }
 }
