@@ -111,13 +111,6 @@
                                         <f:ajax onevent="mostrarModalEditarUsuario"/>
                                     </h:commandLink>
                                     &nbsp; &nbsp;
-                                    <h:commandLink class="glyphicon glyphicon-remove" title="#{msgs.usuarioTitleEliminar}">
-                                        <f:setPropertyActionListener target="#{usuarioBean.usuario}" value="#{usuario}"/>
-                                        <f:setPropertyActionListener target="#{usuarioBean.eliminarReg}" value="#{true}"/>
-                                        <f:ajax render=":frmModalEliminar" />
-                                        <f:ajax onevent="mostrarModalEliminarUsuario"/>
-                                    </h:commandLink>
-                                    &nbsp; &nbsp;
                                     <h:commandLink class="glyphicon glyphicon-th" title="#{msgs.usuarioTitlePrograma}">
                                         <f:setPropertyActionListener target="#{usuarioBean.usuario}" value="#{usuario}"/>
                                         <f:setPropertyActionListener target="#{usuarioBean.listaProgramas}" value="#{usuarioBean.obtenerProgramasxUsuario()}"/>

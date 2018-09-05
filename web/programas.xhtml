@@ -123,7 +123,7 @@
 										<f:ajax onevent="mostrarModalEditarPrograma" />
 									</h:commandLink>
 									&nbsp; &nbsp;
-									<h:commandLink class="glyphicon glyphicon-remove" title="#{msgs.usuarioTitleEliminar}">
+                                                                        <h:commandLink class="glyphicon glyphicon-remove" style="display:#{sesionUBean.usuario.idRol.idRol!=1?'none':'inline'}" title="#{msgs.usuarioTitleEliminar}">
 										<f:setPropertyActionListener target="#{programaBean.programa}" value="#{programa}"/>
 										<f:ajax render=":frmModalEliminar" />
 										<f:ajax onevent="mostrarModalEliminarPrograma" />
