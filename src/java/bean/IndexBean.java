@@ -326,22 +326,29 @@ public class IndexBean implements Serializable {
     
         File source = new File("/var/bigbluebutton/published/presentation/" + meetingId + "/");
         File source2 = new File(playback + seccionesURL[5] + "/");
-        File dest = new File("/tmp/grabacion/");
+        File dest = new File("/tmp/" + grabacion.getNombre() + "/");
+        File zip = new File("/tmp/" + grabacion.getNombre() + ".zip");
+       
         try {
-            FileUtils.copyDirectory(source, dest);
-            FileUtils.copyDirectory(source2, dest);
+             if(!dest.exists()){
+                FileUtils.copyDirectory(source, dest);
+                FileUtils.copyDirectory(source2, dest);
+             }
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-    FileOutputStream fos = new FileOutputStream("/tmp/" + grabacion.getNombre() + ".zip");
-    ZipOutputStream zos = new ZipOutputStream(fos);
-    //aqui es donde se dice la direccion de donde estan los archivos y subfolders a comprimir
-    addDirToZipArchive(zos, new File("/tmp/grabacion/"), null);
-    zos.flush();
-    fos.flush();
-    zos.close();
-    fos.close();
+        
+    if(!zip.exists()){
+        FileOutputStream fos = new FileOutputStream("/tmp/" + grabacion.getNombre() + ".zip");
+        ZipOutputStream zos = new ZipOutputStream(fos);
+        //aqui es donde se dice la direccion de donde estan los archivos y subfolders a comprimir
+        addDirToZipArchive(zos, new File("/tmp/" + grabacion.getNombre() + "/"), null);
+        zos.flush();
+        fos.flush();
+        zos.close();
+        fos.close();
+    }
 //aqui comienza la descarga
 
     File file = new File("/tmp/" + grabacion.getNombre() + ".zip");
