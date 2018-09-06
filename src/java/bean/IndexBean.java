@@ -318,7 +318,7 @@ public class IndexBean implements Serializable {
     ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
     String bbburl= grabacion.getRecordingurl();
     //aqui esta el meetingId, es de contar caracteres
-    String meetingId = bbburl.substring(bbburl.indexOf("="),bbburl.length());
+    String meetingId = bbburl.substring(bbburl.indexOf("=") + 1, bbburl.length());
     Path carpeta = FileSystems.getDefault().getPath("/tmp/grabacion/");
 
     
@@ -332,7 +332,7 @@ public class IndexBean implements Serializable {
             e.printStackTrace();
         }
 
-    FileOutputStream fos = new FileOutputStream("/tmp/grabacion/archivo.zip");
+    FileOutputStream fos = new FileOutputStream("/tmp/" + grabacion.getNombre() + ".zip");
     ZipOutputStream zos = new ZipOutputStream(fos);
     //aqui es donde se dice la direccion de donde estan los archivos y subfolders a comprimir
     addDirToZipArchive(zos, new File("/tmp/grabacion/"), null);
@@ -342,7 +342,7 @@ public class IndexBean implements Serializable {
     fos.close();
 //aqui comienza la descarga
 
-    File file = new File("/tmp/grabacion/archivo.zip");
+    File file = new File("/tmp/" + grabacion.getNombre() + ".zip");
     if(!file.exists()){
         System.out.println("file not found");
     }
