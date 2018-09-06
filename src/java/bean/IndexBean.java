@@ -319,12 +319,12 @@ public class IndexBean implements Serializable {
     String bbburl= grabacion.getRecordingurl();
     //aqui esta el meetingId, es de contar caracteres
     String meetingId = bbburl.substring(72,129);
-    Path carpeta = FileSystems.getDefault().getPath("C:\\Users\\Mario\\Desktop\\origen\\");
+    Path carpeta = FileSystems.getDefault().getPath("/tmp/grabacion/");
 
     
-        File source = new File("C:\\Users\\Mario\\Desktop\\prueba\\");
-        File source2 = new File("C:\\Users\\Mario\\Desktop\\prueba2\\");
-        File dest = new File("C:\\Users\\Mario\\Desktop\\origen\\");
+        File source = new File("/var/bigbluebutton/published/presentation/" + meetingId + "/");
+        File source2 = new File("/var/bigbluebutton/playback/presentation/2.0/playback.html");
+        File dest = new File("/tmp/grabacion/");
         try {
             FileUtils.copyDirectory(source, dest);
             FileUtils.copyDirectory(source2, dest);
@@ -332,17 +332,17 @@ public class IndexBean implements Serializable {
             e.printStackTrace();
         }
 
-    FileOutputStream fos = new FileOutputStream("C:\\Users\\Mario\\Desktop\\archivo.zip");
+    FileOutputStream fos = new FileOutputStream("/tmp/grabacion/archivo.zip");
     ZipOutputStream zos = new ZipOutputStream(fos);
     //aqui es donde se dice la direccion de donde estan los archivos y subfolders a comprimir
-    addDirToZipArchive(zos, new File("C:\\Users\\Mario\\Desktop\\origen\\"), null);
+    addDirToZipArchive(zos, new File("/tmp/grabacion/"), null);
     zos.flush();
     fos.flush();
     zos.close();
     fos.close();
 //aqui comienza la descarga
 
-    File file = new File("C:/Users/Mario/Desktop/archivo.zip");
+    File file = new File("/tmp/grabacion/archivo.zip");
     if(!file.exists()){
         System.out.println("file not found");
     }
