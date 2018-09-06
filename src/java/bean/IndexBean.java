@@ -315,15 +315,17 @@ public class IndexBean implements Serializable {
     public void descarga() throws FileNotFoundException, Exception{
     HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
     //aqui es donde se dice los parametros de donde estara y el nombre del comprimido
-    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
     String bbburl= grabacion.getRecordingurl();
+    String playback = "/var/bigbluebutton/playback/presentation/";
+    String [] seccionesURL = bbburl.split("/");
+    
+    
     //aqui esta el meetingId, es de contar caracteres
     String meetingId = bbburl.substring(bbburl.indexOf("=") + 1, bbburl.length());
-    Path carpeta = FileSystems.getDefault().getPath("/tmp/grabacion/");
 
     
         File source = new File("/var/bigbluebutton/published/presentation/" + meetingId + "/");
-        File source2 = new File("/var/bigbluebutton/playback/presentation/2.0/playback.html");
+        File source2 = new File(playback + seccionesURL[5] + "/");
         File dest = new File("/tmp/grabacion/");
         try {
             FileUtils.copyDirectory(source, dest);
