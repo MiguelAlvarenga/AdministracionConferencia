@@ -318,7 +318,7 @@ public class IndexBean implements Serializable {
     ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
     String bbburl= grabacion.getRecordingurl();
     //aqui esta el meetingId, es de contar caracteres
-    String meetingId = bbburl.substring(72,129);
+    String meetingId = bbburl.substring(43,96);
     Path carpeta = FileSystems.getDefault().getPath("/tmp/grabacion/");
 
     
