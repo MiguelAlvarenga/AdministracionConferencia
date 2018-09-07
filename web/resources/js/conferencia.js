@@ -18,7 +18,7 @@ $(document).ready(function () {
 });
 
 function cargarCorreoAGuardar() {
-    $(".txtContenidoOculto").html($("#rtfContenido").html());
+    $(".txtContenidoOculto").html($("#rtfContenido3").html());
     $(".txtContenidoOculto").click(); //Ejecuto el evento Ajax de txtContenidoOculto, para que almacene en el Bean en contenido que acabo de setearle.
     $("#btnCancelar").focus(); //Solo le doy el focus a algo.
 }
@@ -50,7 +50,7 @@ function cargarCorreoEnTrumbowyg() {
     }
 
 
-    $('#rtfContenido').trumbowyg('html', Contenido);
+    $('#rtfContenido3').trumbowyg('html', Contenido);
 
 }
 
@@ -81,11 +81,11 @@ function cargarPlantillaEnTrumbowyg() {
     }
 
 
-    $('#rtfContenido').trumbowyg('html', Contenido);
+    $('#rtfContenido3').trumbowyg('html', Contenido);
 }
 
 function mostrarModalDisenarCorreo() {
-    $('#rtfContenido').trumbowyg('html', '');
+    $('#rtfContenido3').trumbowyg('html', '');
     $('#modalDisenarCorreo').modal('show');
 }
 

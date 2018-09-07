@@ -122,6 +122,9 @@ $(document).ready(function () {
 	});
 
 	$('#rtfContenido2').trumbowyg('disable');
+        
+        $('#rtfContenido3').trumbowyg({
+	});
 
 });
 

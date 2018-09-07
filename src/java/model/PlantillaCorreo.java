@@ -50,7 +50,7 @@ public class PlantillaCorreo implements Serializable {
     @JoinColumn(name = "id_tipo_plantilla", referencedColumnName = "id_tipo_plantilla")
     @ManyToOne(optional = false)
     private TipoPlantilla idTipoPlantilla;
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "idPlantillaCorreo")
+    @OneToMany(cascade = {CascadeType.REMOVE,CascadeType.REMOVE, CascadeType.REMOVE}, mappedBy = "idPlantillaCorreo")
     private List<Correo> correoList;
 
     public PlantillaCorreo() {
