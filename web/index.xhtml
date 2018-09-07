@@ -177,7 +177,7 @@
                                         <!--En esta parte se activa el módulo de descargas, desafortunamente fue imposible reproducir las conferencias fuera del
                                                    servidor, debido a que como cree BBB actualmente no cuenta con esta funcionalidad-->
                                         <f:facet name="header">-</f:facet>
-                                        <h:commandLink target="_blank" class="btn btn-xs btn-primary" value="Descargar"  title="#{msgs.indexBtnReproducirTitle}" action="#{indexBean.descarga()}">
+                                        <h:commandLink target="_blank" class="btn btn-xs btn-primary" value="#{msgs.BtnDescargar}"  title="#{msgs.indexBtnDescargar}" action="#{indexBean.descarga()}">
                                             <f:setPropertyActionListener target="#{indexBean.grabacion}" value="#{grabacion}"/> 
                                         </h:commandLink>
                                     </h:column>

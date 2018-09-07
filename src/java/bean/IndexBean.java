@@ -1,21 +1,20 @@
 package bean;
 
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+
 import dao.ConferenciaDao;
 import dao.UsuarioXProgramaDao;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Serializable;
-import java.lang.Object;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -26,11 +25,7 @@ import model.Conferencia;
 import model.Programa;
 import model.Usuario;
 import utils.BbbCalls;
-import java.io.*;
-import java.util.zip.*;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.io.FileUtils;
 @ViewScoped
 @ManagedBean
 public class IndexBean implements Serializable {
@@ -322,7 +317,7 @@ public class IndexBean implements Serializable {
     
     //aqui esta el meetingId, es de contar caracteres
     String meetingId = bbburl.substring(bbburl.indexOf("=") + 1, bbburl.length());
-
+    //String serverUrl = FacesContext.getCurrentInstance().getExternalContext().getRequestServerName();
     /*
         File source = new File("/var/bigbluebutton/published/presentation/" + meetingId + "/");
         File source2 = new File(playback + seccionesURL[5] + "/");
@@ -352,12 +347,13 @@ public class IndexBean implements Serializable {
     }*/
 //aqui comienza la descarga
 
-    File file = new File("/download/presentation/"+meetingId+ "/"+ meetingId + ".mp4");
+    File file = new File("/var/bigbluebutton/published/presentation/"+meetingId+ "/"+ meetingId + ".mp4");
+    //File file = new File("C:/Users/User/Imagenes/AdministracionConferencia/web/resources/img/video" + ".mp4");
     if(!file.exists()){
         System.out.println("file not found");
     }
     response.setContentType("APPLICATION/OCTET-STREAM");
-    response.setHeader("Content-Disposition","attachment; filename=\"" + grabacion.getNombre() + ".zip" + "\"");
+    response.setHeader("Content-Disposition","attachment; filename=\"" + grabacion.getNombre() + ".mp4");
 
     OutputStream out = response.getOutputStream();
     FileInputStream in = new FileInputStream(file);
@@ -373,4 +369,6 @@ public class IndexBean implements Serializable {
      FacesContext.getCurrentInstance().responseComplete();
         
     }
+    
+   
 }
