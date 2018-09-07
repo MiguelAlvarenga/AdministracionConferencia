@@ -323,16 +323,17 @@ public class IndexBean implements Serializable {
     //aqui esta el meetingId, es de contar caracteres
     String meetingId = bbburl.substring(bbburl.indexOf("=") + 1, bbburl.length());
 
-    
+    /*
         File source = new File("/var/bigbluebutton/published/presentation/" + meetingId + "/");
         File source2 = new File(playback + seccionesURL[5] + "/");
+        File source = new File("/download/presentation/" + meetingId + "/" + meetingId + ".mp4");
         File dest = new File("/tmp/" + grabacion.getNombre() + "/");
-        File zip = new File("/tmp/" + grabacion.getNombre() + ".zip");
-       
+        //File zip = new File("/tmp/" + grabacion.getNombre() + ".zip");
+        
         try {
              if(!dest.exists()){
                 FileUtils.copyDirectory(source, dest);
-                FileUtils.copyDirectory(source2, dest);
+                //FileUtils.copyDirectory(source2, dest);
              }
             
         } catch (IOException e) {
@@ -348,10 +349,10 @@ public class IndexBean implements Serializable {
         fos.flush();
         zos.close();
         fos.close();
-    }
+    }*/
 //aqui comienza la descarga
 
-    File file = new File("/tmp/" + grabacion.getNombre() + ".zip");
+    File file = new File("/download/presentation/"+meetingId+ "/"+ meetingId + ".mp4");
     if(!file.exists()){
         System.out.println("file not found");
     }
