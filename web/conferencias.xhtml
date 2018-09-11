@@ -55,7 +55,9 @@
 
                     <h4>#{msgs.conferenciaMsjPrincipal}</h4>
                     #{msgs.conferenciaDescripcion}
-                    <br/><br/><br/>
+                    <br/><br/>
+                    <h4 style="color: #337ab7;">Estado del Servidor: #{indexBean.serverStatus()}</h4>
+                    
                     <h:form>
                         <h:commandLink class="btn btn-primary" value="#{msgs.conferenciaBtnNuevo}" onclick="$('#modalEditar').modal('show');">
                             <f:actionListener binding="#{conferenciaBean.limpiar()}"/>

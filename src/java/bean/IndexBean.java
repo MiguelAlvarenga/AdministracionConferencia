@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -369,6 +371,19 @@ public class IndexBean implements Serializable {
      FacesContext.getCurrentInstance().responseComplete();
         
     }
-    
+     public String serverStatus() throws Exception {
+         String text;
+         try{
+             URL dir = new URL("https://bbb.salud.gob.sv");
+             HttpURLConnection dirCon = (HttpURLConnection) dir.openConnection();
+             dirCon.setRequestMethod("GET");
+             dirCon.setConnectTimeout(3000);
+             dirCon.connect();
+             text = "Online";
+         }catch (Exception e){
+             text = "Offline";
+         }
+         return text;
+     }
    
 }

@@ -15,6 +15,8 @@ $(document).ready(function () {
         $(".btnSubirArchivo").click();
     });
     
+    $("h4:contains('Offline')").css("color","red");
+    
 });
 
 function cargarCorreoAGuardar() {
