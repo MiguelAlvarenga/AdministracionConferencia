@@ -238,10 +238,10 @@
                                 </div>
                                 <div class="col-sm-9">
                                     <label>#{msgs.usuarioHeaderNombre}: </label>
-                                    <h:inputText immediate="true" required="true" label=" " id="txtNombre" class="form-control" p:placeholder="#{msgs.usuarioHeaderNombre}" value="#{conferenciaBean.conferencia.nombre}">
+                                    <h:inputText immediate="true" required="true" label=" " id="txtNombre" class="form-control validarUno" p:placeholder="#{msgs.usuarioHeaderNombre}" value="#{conferenciaBean.conferencia.nombre}" onkeyup="verificarCampos()">
                                         <f:validateRequired/>
                                         <f:validateLength minimum="5" maximum="100"/>
-                                        <f:ajax   event="blur" render="txtNombreVal"/>
+                                        <f:ajax   event="keyup" render="txtNombreVal"/>
                                     </h:inputText>
                                     <small class="text-muted red-color-text"> <h:message id="txtNombreVal" for="txtNombre"/> </small>
                                     <br/>
@@ -260,7 +260,7 @@
                             <div class="row">
                                 <div class="col-sm-12">								
                                     <label>#{msgs.etiquetaHeader2}: </label>  
-                                    <h:inputTextarea immediate="true" required="true" label=" " id="txtDescripcion" class="form-control" p:placeholder="#{msgs.etiquetaHeader2}" rows="3" value="#{conferenciaBean.conferencia.descripcion}">
+                                    <h:inputTextarea immediate="true" required="true" label=" " id="txtDescripcion" class="form-control validarDos" p:placeholder="#{msgs.etiquetaHeader2}" rows="3" value="#{conferenciaBean.conferencia.descripcion}" onkeyup="verificarCampos()">
                                         <f:validateRequired/>
                                         <f:validateLength minimum="1" maximum="500"/>
                                         <f:ajax   event="blur" render="txtDescripcionVal"/>
@@ -296,7 +296,7 @@
                             <div class="row">
                                 <div class="col-sm-12">							
                                     <label>#{msgs.indexPonentes}: &nbsp;</label><a href="" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="#{msgs.conferenciaTooltipSpeaker}"></a> 
-                                    <h:inputTextarea id="txtPonentes" class="form-control" p:placeholder="#{msgs.conferenciaPlaceHold}" rows="3" value="#{conferenciaBean.conferencia.ponentes}">
+                                    <h:inputTextarea id="txtPonentes" class="form-control validarTres" p:placeholder="#{msgs.conferenciaPlaceHold}" rows="3" value="#{conferenciaBean.conferencia.ponentes}" onkeyup="verificarCampos()">
                                         <f:ajax   event="blur"/>
                                     </h:inputTextarea>
                                 </div>
@@ -304,8 +304,8 @@
                             <br/>
                             <div class="row">
                                 <div class="col-sm-12">														
-                                    <label>#{msgs.indexModeradores}: &nbsp;</label><a href="" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="#{msgs.conferenciaTooltipModerator}"></a>  
-                                    <h:inputTextarea id="txtModeradores" class="form-control" p:placeholder="#{msgs.conferenciaPlaceHold}" rows="3" value="#{conferenciaBean.conferencia.moderadores}">
+                                    <label>#{msgs.indexModeradores}: &nbsp;</label><a href="" class="glyphicon glyphicon-info-sign " data-toggle="tooltip" title="#{msgs.conferenciaTooltipModerator}"></a>  
+                                    <h:inputTextarea id="txtModeradores" class="form-control validarCuatro" p:placeholder="#{msgs.conferenciaPlaceHold}" rows="3" value="#{conferenciaBean.conferencia.moderadores}" onkeyup="verificarCampos()">
                                         <f:ajax   event="blur"/>
                                     </h:inputTextarea>
                                 </div>
@@ -333,7 +333,7 @@
                                     <!--FECHA DEL FORMULARIO-->
                                     <label>#{msgs.conferenciaFechaPonencia}: </label> 
                                     
-                                    <h:inputText immediate="true" required="true" label=" " id="txtFchPonencia" class="form-control datepickerF" p:placeholder="#{msgs.conferenciaFormato}: dd/MM/yyyy" value="#{conferenciaBean.fecha}">
+                                    <h:inputText immediate="true" required="true" label=" " id="txtFchPonencia" class="form-control datepickerF validarCinco" p:placeholder="#{msgs.conferenciaFormato}: dd/MM/yyyy" value="#{conferenciaBean.fecha}" onchange="verificarCampos()">
                                         <f:validateRequired />
                                         <f:validator validatorId="fechaValidator"/>
                                         <f:ajax   event="change" render="txtFchPonenciaVal"/>
@@ -345,7 +345,7 @@
 
                                 <div class="col-sm-3" >
                                     <label>#{msgs.conferenciaHoraPonencia}: </label>  
-                                    <h:inputText id="txtHrPonencia" class="form-control timepickerR" p:placeholder="#{msgs.conferenciaFormato}: HH:MM am/pm" value="#{conferenciaBean.conferencia.horaPonencia}">
+                                    <h:inputText id="txtHrPonencia" class="form-control timepickerR validarSeis" p:placeholder="#{msgs.conferenciaFormato}: HH:MM am/pm" value="#{conferenciaBean.conferencia.horaPonencia}" onchange ="verificarCampos()">
                                         <f:validator validatorId="horaValidator"/>
                                         <f:ajax   event="change" render="txtHrPonenciaVal"/>
                                     </h:inputText>
@@ -367,7 +367,7 @@
                         <!-- 4.3 BOTONES DEL MODAL -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">#{msgs.btnCancelar}</button>
-                            <h:commandLink id="btnGuardar" class="btn btn-primary" value="#{msgs.btnGuardar}" onclick="$('#modalEditar').modal('hide');">
+                            <h:commandLink id="btnGuardar" class="btn btn-primary idButtonAncla" value="#{msgs.btnGuardar}"  onclick="$('#modalEditar').modal('hide');">
                                 <f:actionListener binding="#{conferenciaBean.guardar()}" />
                                 <f:actionListener binding="#{conferenciaBean.obtenerTodos()}" />
                                 <f:ajax render=":frmPrincipal :frmMensajeGlobal" onevent="#{('function(data) { loadInsert(data,'.concat(conferenciaBean.lista.size())).concat(') }')}"/>
@@ -825,6 +825,23 @@
             document.execCommand("copy");
         }
         
+       /* <![CDATA[ */
+	 function verificarCampos(){
+            var primerValor = $(".validarUno").val().length;
+            var segundoValor  = $.trim($(".validarDos").val());
+            var tercerValor = $.trim($(".validarTres").val());
+            var cuatroValor = $.trim($(".validarCuatro").val());
+            var cincoValor = $(".validarCinco").val().length;
+            var seisValor = $(".validarSeis").val().length;
+            if(primerValor !== 0 && segundoValor !== 0 && tercerValor !== "" && cuatroValor !== "" && cincoValor !== "" && seisValor !== 0){
+                $(".idButtonAncla").css("pointer-events", "auto");
+            }else{
+                $(".idButtonAncla").css("pointer-events", "none");
+            }
+            
+        }
+        /* ]]> */ 
+        
     </script>
 
     <style>
@@ -893,6 +910,9 @@
           }
           .textoImportante{
                 background-color: #e5e7ea;
+            }
+            .idButtonAncla{
+                 pointer-events: none;
             }
     </style>
 </html>
