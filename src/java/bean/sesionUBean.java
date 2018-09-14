@@ -161,7 +161,6 @@ public class sesionUBean implements Serializable {
 
     public void iniciarSesion() {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("utils.mis_mensajes", FacesContext.getCurrentInstance().getViewRoot().getLocale());
-        System.out.println("aqui");
         int flagErrorLoggeo = 0;
         String alertMsg = "";
         if (!logged) {
